@@ -53,6 +53,22 @@ body {
   .font-crt {
     font-family: "VT323", "Courier New", monospace;
   }
+
+  /* LED 电平表：琥珀色发光条（VU 表） */
+  .crt-vu-bar {
+    background: linear-gradient(
+      to top,
+      rgb(249 115 22 / 0.7),
+      rgb(251 191 36 / 0.9)
+    );
+    box-shadow: 0 0 6px rgb(249 115 22 / 0.45);
+  }
+
+  /* 峰值保持亮段：更亮，辉光更强 */
+  .crt-vu-peak {
+    background: rgb(251 191 36);
+    box-shadow: 0 0 10px rgb(251 191 36 / 0.9);
+  }
 }
 
 /* ============ CRT 显像管效果层 ============
@@ -66,7 +82,8 @@ body {
 }
 
 html.crt-off .crt-band,
-html.crt-off .crt-frame {
+html.crt-off .crt-frame,
+html.crt-off .crt-vu {
   display: none;
 }
 

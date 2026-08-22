@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/navbar";
+import AudioVisualizer from "@/components/audio-visualizer";
 import { siteConfig } from "@/lib/site";
 import "@fontsource/vt323";
 import "./globals.css";
@@ -43,6 +44,9 @@ export default function RootLayout({
             <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-orange-600/15 blur-3xl" />
             <div className="absolute -right-24 top-1/3 h-80 w-80 rounded-full bg-amber-500/10 blur-3xl" />
             <div className="absolute -bottom-32 left-1/4 h-96 w-96 rounded-full bg-red-600/10 blur-3xl" />
+
+            {/* 复古 LED 电平表：让背景更像显像管电视机 */}
+            <AudioVisualizer />
           </div>
 
           {/* CRT 显像管效果层：滚动亮带 / 屏幕边框 */}
@@ -54,13 +58,6 @@ export default function RootLayout({
           <Navbar />
 
           <main className="flex-1 py-12">{children}</main>
-
-          <footer className="border-t border-gray-800/60">
-            <div className="mx-auto max-w-2xl px-6 py-6 text-sm text-gray-500">
-              © <span className="font-crt">{new Date().getFullYear()}</span>{" "}
-              {siteConfig.name} · Built with Next.js
-            </div>
-          </footer>
         </div>
       </body>
     </html>
