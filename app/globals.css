@@ -173,6 +173,13 @@ html:not(.crt-off) body::after {
   }
 }
 
+/* 背景视频：系统开启减弱动态效果时不播放 */
+@media (prefers-reduced-motion: reduce) {
+  .crt-bg-video {
+    display: none;
+  }
+}
+
 /* 移动端：减弱扫描线和暗角强度 */
 @media (max-width: 640px) {
   html:not(.crt-off) body::before {
