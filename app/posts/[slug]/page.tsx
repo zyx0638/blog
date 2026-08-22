@@ -30,16 +30,24 @@ export default function PostPage({ params }: PostPageProps) {
   return (
     <article className="mx-auto max-w-2xl px-6">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold">{post.title}</h1>
-        <time className="mt-2 block text-sm text-gray-500">{post.date}</time>
+        <h1 className="text-3xl font-bold sm:text-4xl">{post.title}</h1>
+        <time className="mt-3 flex items-center gap-2 text-sm text-gray-500">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-orange-500" />
+          {post.date}
+        </time>
       </header>
 
-      <div className="prose dark:prose-invert max-w-none">
-        <ReactMarkdown>{post.content}</ReactMarkdown>
+      <div className="glass rounded-2xl p-6 sm:p-8">
+        <div className="prose max-w-none prose-invert prose-a:text-orange-400 prose-headings:scroll-mt-24">
+          <ReactMarkdown>{post.content}</ReactMarkdown>
+        </div>
       </div>
 
-      <div className="mt-12">
-        <Link href="/" className="text-sm text-gray-500 hover:underline">
+      <div className="mt-8">
+        <Link
+          href="/"
+          className="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm text-gray-400 transition-colors hover:text-white"
+        >
           ← 返回首页
         </Link>
       </div>

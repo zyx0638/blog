@@ -5,11 +5,13 @@ export default function MomentList() {
   const moments = getAllMoments();
 
   return (
-    <ol className="flex flex-col gap-6">
+    <ol className="flex flex-col gap-4">
       {moments.map((moment) => (
-        <li key={moment.slug}>
-          <p className="text-sm text-gray-500">{moment.date}</p>
-          <div className="mt-1 text-gray-700 dark:text-gray-300">
+        <li key={moment.slug} className="glass rounded-2xl p-5">
+          <p className="text-xs font-medium text-orange-400">
+            {moment.date}
+          </p>
+          <div className="mt-2 text-gray-300">
             <ReactMarkdown>{moment.content}</ReactMarkdown>
           </div>
         </li>

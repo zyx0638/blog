@@ -34,13 +34,24 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex min-h-screen flex-col">
+          {/* 背景余烬光斑：毛玻璃的模糊效果靠它们才能看出来 */}
+          <div
+            aria-hidden
+            className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+          >
+            <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-orange-600/15 blur-3xl" />
+            <div className="absolute -right-24 top-1/3 h-80 w-80 rounded-full bg-amber-500/10 blur-3xl" />
+            <div className="absolute -bottom-32 left-1/4 h-96 w-96 rounded-full bg-red-600/10 blur-3xl" />
+          </div>
+
           <Navbar />
 
           <main className="flex-1 py-12">{children}</main>
 
-          <footer className="border-t border-gray-200 dark:border-gray-800">
+          <footer className="border-t border-gray-800/60">
             <div className="mx-auto max-w-2xl px-6 py-6 text-sm text-gray-500">
-              © {new Date().getFullYear()} {siteConfig.name} · Built with Next.js
+              © {new Date().getFullYear()} {siteConfig.name} · Built with
+              Next.js
             </div>
           </footer>
         </div>

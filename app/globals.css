@@ -3,15 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0a0a0a;
+  --foreground: #f5f5f5;
 }
 
 body {
@@ -20,8 +13,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+::selection {
+  background: rgb(249 115 22 / 0.4);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* 毛玻璃面板：导航、卡片、正文容器统一使用 */
+  .glass {
+    @apply border border-orange-500/20 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/40;
   }
 }

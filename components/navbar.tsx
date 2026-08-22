@@ -21,34 +21,37 @@ export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  const desktopLinkClass = (href: string) =>
-    `text-sm transition-colors hover:text-foreground ${
-      isActivePath(pathname, href)
-        ? "font-semibold text-foreground"
-        : "text-gray-500"
+  const activeLinkClass =
+    "bg-orange-500 font-medium text-black shadow-md shadow-orange-500/30";
+  const inactiveLinkClass = "text-gray-400 hover:bg-white/10 hover:text-white";
+
+  const pillLinkClass = (href: string) =>
+    `rounded-full px-3 py-1.5 text-sm transition-colors ${
+      isActivePath(pathname, href) ? activeLinkClass : inactiveLinkClass
     }`;
 
-  const mobileLinkClass = (href: string) =>
-    `block rounded-md px-3 py-2 text-sm transition-colors hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-800 ${
-      isActivePath(pathname, href)
-        ? "font-semibold text-foreground"
-        : "text-gray-500"
+  const menuLinkClass = (href: string) =>
+    `block rounded-xl px-3 py-2 text-sm transition-colors ${
+      isActivePath(pathname, href) ? activeLinkClass : inactiveLinkClass
     }`;
 
   return (
-    <header className="border-b border-gray-200 dark:border-gray-800">
-      <div className="mx-auto flex max-w-2xl items-center justify-between px-6 py-6">
-        <Link href="/" className="text-lg font-bold">
+    <header className="sticky top-0 z-50 px-4 pt-4">
+      <div className="glass mx-auto flex max-w-2xl items-center justify-between rounded-2xl px-5 py-3">
+        <Link
+          href="/"
+          className="bg-gradient-to-r from-orange-500 to-amber-300 bg-clip-text text-lg font-bold text-transparent"
+        >
           {siteConfig.name}
         </Link>
 
         {/* 桌面端导航 */}
-        <nav className="hidden gap-6 sm:flex" aria-label="主导航">
+        <nav className="hidden gap-1 sm:flex" aria-label="主导航">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={desktopLinkClass(item.href)}
+              className={pillLinkClass(item.href)}
             >
               {item.label}
             </Link>
@@ -61,7 +64,7 @@ export default function Navbar() {
           aria-label={open ? "关闭菜单" : "打开菜单"}
           aria-expanded={open}
           onClick={() => setOpen(!open)}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:text-foreground dark:border-gray-800 sm:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-white/10 hover:text-white sm:hidden"
         >
           {open ? (
             <svg
@@ -94,15 +97,15 @@ export default function Navbar() {
       {/* 移动端下拉菜单 */}
       {open && (
         <nav
-          className="border-t border-gray-200 px-6 py-3 dark:border-gray-800 sm:hidden"
+          className="glass mx-auto mt-2 max-w-2xl rounded-2xl px-4 py-3 sm:hidden"
           aria-label="移动端导航"
         >
-          <ul className="flex flex-col">
+          <ul className="flex flex-col gap-1">
             {navItems.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={mobileLinkClass(item.href)}
+                  className={menuLinkClass(item.href)}
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
