@@ -25,7 +25,7 @@ function parseMomentFile(fileName: string): Moment {
   };
 }
 
-/** 读取所有说说，按日期倒序排列；目录不存在时返回空列表 */
+/** 读取所有 moment（一些碎碎念），按日期倒序排列；目录不存在时返回空列表 */
 export function getAllMoments(): Moment[] {
   if (!fs.existsSync(momentsDirectory)) return [];
 
