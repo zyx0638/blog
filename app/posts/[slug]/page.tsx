@@ -30,8 +30,10 @@ export default function PostPage({ params }: PostPageProps) {
   return (
     <article className="mx-auto max-w-2xl px-6">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold sm:text-4xl">{post.title}</h1>
-        <time className="mt-3 flex items-center gap-2 text-sm text-gray-500">
+        <h1 className="crt-aberration text-3xl font-bold sm:text-4xl">
+          {post.title}
+        </h1>
+        <time className="font-crt mt-3 flex items-center gap-2 text-sm text-gray-500">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-orange-500" />
           {post.date}
         </time>

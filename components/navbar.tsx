@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { siteConfig } from "@/lib/site";
 
 const navItems = [
@@ -20,6 +20,22 @@ function isActivePath(pathname: string, href: string) {
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [crtOn, setCrtOn] = useState(true);
+
+  // 挂载时恢复用户的 CRT 偏好
+  useEffect(() => {
+    if (localStorage.getItem("crt") === "off") {
+      document.documentElement.classList.add("crt-off");
+      setCrtOn(false);
+    }
+  }, []);
+
+  const toggleCrt = () => {
+    const next = !crtOn;
+    setCrtOn(next);
+    document.documentElement.classList.toggle("crt-off", !next);
+    localStorage.setItem("crt", next ? "on" : "off");
+  };
 
   const activeLinkClass =
     "bg-orange-500 font-medium text-black shadow-md shadow-orange-500/30";
@@ -58,40 +74,57 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* 移动端汉堡按钮 */}
-        <button
-          type="button"
-          aria-label={open ? "关闭菜单" : "打开菜单"}
-          aria-expanded={open}
-          onClick={() => setOpen(!open)}
-          className="flex h-9 w-9 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-white/10 hover:text-white sm:hidden"
-        >
-          {open ? (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            >
-              <path d="M3 3l10 10M13 3L3 13" />
-            </svg>
-          ) : (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            >
-              <path d="M2 4h12M2 8h12M2 12h12" />
-            </svg>
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          {/* CRT 效果开关 */}
+          <button
+            type="button"
+            onClick={toggleCrt}
+            aria-pressed={crtOn}
+            title={crtOn ? "关闭 CRT 效果" : "开启 CRT 效果"}
+            className={`font-crt rounded-full px-2.5 py-1 text-sm leading-none transition-colors ${
+              crtOn
+                ? "bg-orange-500/20 text-orange-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]"
+                : "text-gray-500 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            CRT
+          </button>
+
+          {/* 移动端汉堡按钮 */}
+          <button
+            type="button"
+            aria-label={open ? "关闭菜单" : "打开菜单"}
+            aria-expanded={open}
+            onClick={() => setOpen(!open)}
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-white/10 hover:text-white sm:hidden"
+          >
+            {open ? (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              >
+                <path d="M3 3l10 10M13 3L3 13" />
+              </svg>
+            ) : (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              >
+                <path d="M2 4h12M2 8h12M2 12h12" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* 移动端下拉菜单 */}

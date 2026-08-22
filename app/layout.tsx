@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/navbar";
 import { siteConfig } from "@/lib/site";
+import "@fontsource/vt323";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -44,14 +45,20 @@ export default function RootLayout({
             <div className="absolute -bottom-32 left-1/4 h-96 w-96 rounded-full bg-red-600/10 blur-3xl" />
           </div>
 
+          {/* CRT 显像管效果层：滚动亮带 / 屏幕边框 */}
+          <div aria-hidden className="crt-effects">
+            <div className="crt-band" />
+            <div className="crt-frame" />
+          </div>
+
           <Navbar />
 
           <main className="flex-1 py-12">{children}</main>
 
           <footer className="border-t border-gray-800/60">
             <div className="mx-auto max-w-2xl px-6 py-6 text-sm text-gray-500">
-              © {new Date().getFullYear()} {siteConfig.name} · Built with
-              Next.js
+              © <span className="font-crt">{new Date().getFullYear()}</span>{" "}
+              {siteConfig.name} · Built with Next.js
             </div>
           </footer>
         </div>

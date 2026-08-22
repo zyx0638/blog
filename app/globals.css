@@ -26,4 +26,152 @@ body {
   .glass {
     @apply border border-orange-500/20 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/40;
   }
+
+  /* 橙色荧光辉光 */
+  .crt-glow {
+    text-shadow:
+      0 0 6px rgb(249 115 22 / 0.55),
+      0 0 18px rgb(249 115 22 / 0.25);
+  }
+
+  /* 色差：橙/青双色错位 + 辉光 */
+  .crt-aberration {
+    text-shadow:
+      1.5px 0 rgb(255 80 0 / 0.35),
+      -1.5px 0 rgb(34 211 238 / 0.25),
+      0 0 12px rgb(249 115 22 / 0.4);
+  }
+
+  /* 渐变文字的色差（text-shadow 对透明填充无效，改用沿字形边缘的 drop-shadow） */
+  .crt-gradient-aberration {
+    filter: drop-shadow(1.5px 0 rgb(255 80 0 / 0.4))
+      drop-shadow(-1.5px 0 rgb(34 211 238 / 0.3))
+      drop-shadow(0 0 10px rgb(249 115 22 / 0.45));
+  }
+
+  /* 像素字体（VT323 只覆盖英文/数字，中文自动回退系统字体） */
+  .font-crt {
+    font-family: "VT323", "Courier New", monospace;
+  }
+}
+
+/* ============ CRT 显像管效果层 ============
+   默认开启；html 带 .crt-off 时全部关闭
+   动画统一遵守 prefers-reduced-motion */
+
+.crt-band,
+.crt-frame {
+  position: fixed;
+  pointer-events: none;
+}
+
+html.crt-off .crt-band,
+html.crt-off .crt-frame {
+  display: none;
+}
+
+/* 扫描线：细横纹覆盖全屏 */
+html:not(.crt-off) body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgb(0 0 0 / 0.12) 0px,
+    rgb(0 0 0 / 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* 暗角：四周渐暗 */
+html:not(.crt-off) body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgb(0 0 0 / 0.5) 100%
+  );
+}
+
+/* 滚动亮带：缓慢扫过屏幕 */
+.crt-band {
+  left: 0;
+  right: 0;
+  top: -20vh;
+  height: 20vh;
+  z-index: 59;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgb(249 115 22 / 0.08) 45%,
+    rgb(249 115 22 / 0.08) 55%,
+    transparent
+  );
+}
+
+@keyframes crt-band {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(140vh);
+  }
+}
+
+/* 屏幕边框：模拟 CRT 屏幕边缘 */
+.crt-frame {
+  inset: 8px;
+  z-index: 58;
+  border-radius: 20px;
+  border: 1px solid rgb(249 115 22 / 0.15);
+}
+
+/* 轻微闪烁：偶发的一次极短变暗 */
+@keyframes crt-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.985;
+  }
+  94% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.crt-off) .crt-band {
+    animation: crt-band 8s linear infinite;
+  }
+  html:not(.crt-off) body {
+    animation: crt-flicker 3.5s infinite steps(1);
+  }
+}
+
+/* 移动端：减弱扫描线和暗角强度 */
+@media (max-width: 640px) {
+  html:not(.crt-off) body::before {
+    background: repeating-linear-gradient(
+      0deg,
+      rgb(0 0 0 / 0.08) 0px,
+      rgb(0 0 0 / 0.08) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  }
+  html:not(.crt-off) body::after {
+    background: radial-gradient(
+      ellipse at center,
+      transparent 65%,
+      rgb(0 0 0 / 0.35) 100%
+    );
+  }
 }
