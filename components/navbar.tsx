@@ -13,6 +13,7 @@ const navItems = [
   { href: "/projects", label: "项目" },
   { href: "/hobbies", label: "爱好" },
   { href: "/about", label: "关于" },
+  { href: "/admin", label: "管理端" },
 ];
 
 function isActivePath(pathname: string, href: string) {
