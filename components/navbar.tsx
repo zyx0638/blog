@@ -9,6 +9,9 @@ const navItems = [
   { href: "/", label: "首页" },
   { href: "/posts", label: "文章" },
   { href: "/moments", label: "一些碎碎念" },
+  { href: "/gallery", label: "照片墙" },
+  { href: "/projects", label: "项目" },
+  { href: "/hobbies", label: "爱好" },
   { href: "/about", label: "关于" },
 ];
 

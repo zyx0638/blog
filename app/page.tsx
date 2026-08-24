@@ -1,6 +1,9 @@
 import PostList from "@/components/post-list";
 import { siteConfig } from "@/lib/site";
 
+// 文章存数据库，按请求渲染，保证后台发布后立即生效
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <div className="mx-auto max-w-2xl px-6">

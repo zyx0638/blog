@@ -1,0 +1,14 @@
+services:
+  blog:
+    build: .
+    restart: unless-stopped
+    ports:
+      # 只监听本机，由 nginx 反代对外提供 HTTPS
+      - "127.0.0.1:3000:3000"
+    environment:
+      # 部署前务必改成自己的值（与本地 .env.local 无关）
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET}
+    volumes:
+      # SQLite 数据库文件必须挂卷，否则容器重建数据丢失
+      - ./data:/app/data

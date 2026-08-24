@@ -1,5 +1,7 @@
 import PostList from "@/components/post-list";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "文章",
 };

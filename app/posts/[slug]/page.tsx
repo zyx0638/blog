@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
-import { getAllPosts, getPostBySlug } from "@/lib/posts";
+import { getPostBySlug } from "@/lib/posts";
+
+// 文章存数据库，按请求渲染，删除静态预生成
+export const dynamic = "force-dynamic";
 
 interface PostPageProps {
   params: { slug: string };
-}
-
-/** 预生成所有文章页面 */
-export function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
 }
 
 export function generateMetadata({ params }: PostPageProps) {

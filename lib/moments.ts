@@ -1,8 +1,6 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-
-const momentsDirectory = path.join(process.cwd(), "moments");
+import { desc, eq } from "drizzle-orm";
+import { moments } from "@/db/schema";
+import { db } from "@/lib/db";
 
 export interface Moment {
   slug: string;
@@ -10,28 +8,89 @@ export interface Moment {
   content: string;
 }
 
-function parseMomentFile(fileName: string): Moment {
-  const slug = fileName.replace(/\.md$/, "");
-  const fileContents = fs.readFileSync(
-    path.join(momentsDirectory, fileName),
-    "utf8"
-  );
-  const { data, content } = matter(fileContents);
+/** 后台使用的碎碎念类型：公开字段 + id */
+export interface AdminMoment extends Moment {
+  id: number;
+}
 
+const momentFields = {
+  slug: moments.slug,
+  date: moments.date,
+  content: moments.content,
+};
+
+const adminMomentFields = { id: moments.id, ...momentFields };
+
+/** 读取所有碎碎念，按日期倒序排列 */
+export function getAllMoments(): Moment[] {
+  return db.select(momentFields).from(moments).orderBy(desc(moments.date)).all();
+}
+
+/** 后台：读取所有碎碎念（含 id），按日期倒序 */
+export function getAllMomentsAdmin(): AdminMoment[] {
+  return db
+    .select(adminMomentFields)
+    .from(moments)
+    .orderBy(desc(moments.date))
+    .all();
+}
+
+export interface MomentInput {
+  date: string;
+  content: string;
+}
+
+/** 后台：新建碎碎念，slug 自动生成 */
+export function createMoment(input: MomentInput): AdminMoment | undefined {
+  const now = new Date().toISOString();
+  const row = db
+    .insert(moments)
+    .values({
+      slug: `m-${now.replace(/\D/g, "")}`,
+      date: input.date,
+      content: input.content,
+      createdAt: now,
+      updatedAt: now,
+    })
+    .returning()
+    .get();
+
+  if (!row) return undefined;
   return {
-    slug,
-    date: data.date ?? "",
-    content,
+    id: row.id,
+    slug: row.slug,
+    date: row.date,
+    content: row.content,
   };
 }
 
-/** 读取所有 moment（一些碎碎念），按日期倒序排列；目录不存在时返回空列表 */
-export function getAllMoments(): Moment[] {
-  if (!fs.existsSync(momentsDirectory)) return [];
+/** 后台：更新碎碎念，不存在时返回 undefined */
+export function updateMoment(
+  id: number,
+  input: MomentInput
+): AdminMoment | undefined {
+  const row = db
+    .update(moments)
+    .set({
+      date: input.date,
+      content: input.content,
+      updatedAt: new Date().toISOString(),
+    })
+    .where(eq(moments.id, id))
+    .returning()
+    .get();
 
-  const fileNames = fs.readdirSync(momentsDirectory);
-  return fileNames
-    .filter((fileName) => fileName.endsWith(".md"))
-    .map(parseMomentFile)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+  if (!row) return undefined;
+  return {
+    id: row.id,
+    slug: row.slug,
+    date: row.date,
+    content: row.content,
+  };
+}
+
+/** 后台：删除碎碎念，返回是否删除成功 */
+export function deleteMoment(id: number): boolean {
+  const result = db.delete(moments).where(eq(moments.id, id)).run();
+  return result.changes > 0;
 }
