@@ -5,6 +5,6 @@ export interface SiteConfig {
 
 /** 站点全局信息：导航栏、SEO 元信息、页脚等统一从这里读取 */
 export const siteConfig: SiteConfig = {
-  name: "zyx的小世界",
+  name: "欢迎来到kobe的lab",
   description: "一个用 Next.js 14 + Tailwind CSS 搭建的个人博客",
 };

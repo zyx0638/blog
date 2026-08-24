@@ -52,78 +52,81 @@ export default function Navbar() {
     }`;
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4">
-      <div className="glass mx-auto flex max-w-2xl items-center justify-between rounded-2xl px-5 py-3">
-        <Link
-          href="/"
-          className="bg-gradient-to-r from-orange-500 to-amber-300 bg-clip-text text-lg font-bold text-transparent"
-        >
-          {siteConfig.name}
-        </Link>
+    <header className="sticky top-0 z-50">
+      {/* 玻璃条铺满屏幕边缘，无外边距；内容仍居中与正文对齐 */}
+      <div className="glass">
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-5 py-3">
+          <Link
+            href="/"
+            className="bg-gradient-to-r from-orange-500 to-amber-300 bg-clip-text text-lg font-bold text-transparent"
+          >
+            {siteConfig.name}
+          </Link>
 
-        {/* 桌面端导航 */}
-        <nav className="hidden gap-1 sm:flex" aria-label="主导航">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={pillLinkClass(item.href)}
+          {/* 桌面端导航 */}
+          <nav className="hidden gap-1 sm:flex" aria-label="主导航">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={pillLinkClass(item.href)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            {/* CRT 效果开关 */}
+            <button
+              type="button"
+              onClick={toggleCrt}
+              aria-pressed={crtOn}
+              title={crtOn ? "关闭 CRT 效果" : "开启 CRT 效果"}
+              className={`font-crt rounded-full px-2.5 py-1 text-sm leading-none transition-colors ${
+                crtOn
+                  ? "bg-orange-500/20 text-orange-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]"
+                  : "text-gray-500 hover:bg-white/10 hover:text-white"
+              }`}
             >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+              CRT
+            </button>
 
-        <div className="flex items-center gap-2">
-          {/* CRT 效果开关 */}
-          <button
-            type="button"
-            onClick={toggleCrt}
-            aria-pressed={crtOn}
-            title={crtOn ? "关闭 CRT 效果" : "开启 CRT 效果"}
-            className={`font-crt rounded-full px-2.5 py-1 text-sm leading-none transition-colors ${
-              crtOn
-                ? "bg-orange-500/20 text-orange-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]"
-                : "text-gray-500 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            CRT
-          </button>
-
-          {/* 移动端汉堡按钮 */}
-          <button
-            type="button"
-            aria-label={open ? "关闭菜单" : "打开菜单"}
-            aria-expanded={open}
-            onClick={() => setOpen(!open)}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-white/10 hover:text-white sm:hidden"
-          >
-            {open ? (
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              >
-                <path d="M3 3l10 10M13 3L3 13" />
-              </svg>
-            ) : (
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              >
-                <path d="M2 4h12M2 8h12M2 12h12" />
-              </svg>
-            )}
-          </button>
+            {/* 移动端汉堡按钮 */}
+            <button
+              type="button"
+              aria-label={open ? "关闭菜单" : "打开菜单"}
+              aria-expanded={open}
+              onClick={() => setOpen(!open)}
+              className="flex h-9 w-9 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-white/10 hover:text-white sm:hidden"
+            >
+              {open ? (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                >
+                  <path d="M3 3l10 10M13 3L3 13" />
+                </svg>
+              ) : (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                >
+                  <path d="M2 4h12M2 8h12M2 12h12" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
