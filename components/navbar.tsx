@@ -42,12 +42,12 @@ export default function Navbar() {
   const inactiveLinkClass = "text-gray-400 hover:bg-white/10 hover:text-white";
 
   const pillLinkClass = (href: string) =>
-    `rounded-full px-3 py-1.5 text-sm transition-colors ${
+    `rounded-full px-3 py-1.5 text-base transition-colors ${
       isActivePath(pathname, href) ? activeLinkClass : inactiveLinkClass
     }`;
 
   const menuLinkClass = (href: string) =>
-    `block rounded-xl px-3 py-2 text-sm transition-colors ${
+    `block rounded-xl px-3 py-2 text-base transition-colors ${
       isActivePath(pathname, href) ? activeLinkClass : inactiveLinkClass
     }`;
 
@@ -55,35 +55,34 @@ export default function Navbar() {
     <header className="sticky top-0 z-50">
       {/* 玻璃条铺满屏幕边缘，无外边距；内容仍居中与正文对齐 */}
       <div className="glass">
-        <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-5 py-3">
+        <div className="flex w-full items-center justify-between py-3 pl-7 pr-5 sm:pl-12 sm:pr-8">
           <Link
             href="/"
-            className="bg-gradient-to-r from-orange-500 to-amber-300 bg-clip-text text-lg font-bold text-transparent"
+            className="bg-gradient-to-r from-orange-500 to-amber-300 bg-clip-text text-2xl font-bold text-transparent"
           >
             {siteConfig.name}
           </Link>
 
-          {/* 桌面端导航 */}
-          <nav className="hidden gap-1 sm:flex" aria-label="主导航">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={pillLinkClass(item.href)}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
           <div className="flex items-center gap-2">
+            {/* 桌面端导航 */}
+            <nav className="hidden gap-1 sm:flex" aria-label="主导航">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={pillLinkClass(item.href)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
             {/* CRT 效果开关 */}
             <button
               type="button"
               onClick={toggleCrt}
               aria-pressed={crtOn}
               title={crtOn ? "关闭 CRT 效果" : "开启 CRT 效果"}
-              className={`font-crt rounded-full px-2.5 py-1 text-sm leading-none transition-colors ${
+              className={`font-crt rounded-full px-2.5 py-1 text-base leading-none transition-colors ${
                 crtOn
                   ? "bg-orange-500/20 text-orange-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]"
                   : "text-gray-500 hover:bg-white/10 hover:text-white"

@@ -54,12 +54,15 @@ body {
     font-family: "VT323", "Courier New", monospace;
   }
 
-  /* LED 电平表：琥珀色发光条（VU 表） */
+  /* LED 电平表：底琥珀 → 中橙 → 顶红过载区（离散段网格） */
   .crt-vu-bar {
     background: linear-gradient(
       to top,
-      rgb(249 115 22 / 0.7),
-      rgb(251 191 36 / 0.9)
+      rgb(251 191 36 / 0.85) 0%,
+      rgb(249 115 22 / 0.9) 55%,
+      rgb(249 115 22 / 0.95) 72%,
+      rgb(239 68 68 / 0.95) 80%,
+      rgb(220 38 38 / 1) 100%
     );
     box-shadow: 0 0 6px rgb(249 115 22 / 0.45);
   }
@@ -68,6 +71,28 @@ body {
   .crt-vu-peak {
     background: rgb(251 191 36);
     box-shadow: 0 0 10px rgb(251 191 36 / 0.9);
+  }
+
+  /* 未点亮 LED 段点阵：轨道层（位于 bar 之下），与 mask 共用同一 tile 几何 */
+  .crt-vu-track {
+    background-image: repeating-linear-gradient(
+      to top,
+      transparent 0,
+      transparent calc(100% / 12 - var(--vu-gap, 1px)),
+      rgb(249 115 22 / 0.09) calc(100% / 12 - var(--vu-gap, 1px)),
+      rgb(249 115 22 / 0.09) calc(100% / 12)
+    );
+  }
+
+  /* 横向暗缝：把 scaleY 后的 bar 切成离散 LED 段（位于 bar 之上） */
+  .crt-vu-mask {
+    background-image: repeating-linear-gradient(
+      to top,
+      transparent 0,
+      transparent calc(100% / 12 - var(--vu-gap, 1px)),
+      rgb(10 10 10) calc(100% / 12 - var(--vu-gap, 1px)),
+      rgb(10 10 10) calc(100% / 12)
+    );
   }
 }
 
