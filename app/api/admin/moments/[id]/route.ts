@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { deleteMoment, updateMoment } from "@/lib/moments";
+import { deleteMoment, getMomentAdmin, updateMoment } from "@/lib/moments";
+import { deleteUploadedFile } from "@/lib/uploads";
 
 interface Params {
   params: { id: string };
@@ -22,10 +23,16 @@ export async function PUT(req: Request, { params }: Params) {
     if (!content) {
       return NextResponse.json({ error: "内容不能为空" }, { status: 400 });
     }
+    const cover = String(body.cover ?? "");
 
-    const moment = updateMoment(Number(params.id), { date, content });
+    const existing = getMomentAdmin(Number(params.id));
+    const moment = updateMoment(Number(params.id), { date, content, cover });
     if (!moment) {
       return NextResponse.json({ error: "碎碎念不存在" }, { status: 404 });
+    }
+    // 换图或移除封面时，清理旧的本地封面文件
+    if (existing && existing.cover && existing.cover !== cover) {
+      deleteUploadedFile(existing.cover);
     }
     return NextResponse.json(moment);
   } catch (e) {
@@ -41,8 +48,11 @@ export async function DELETE(req: Request, { params }: Params) {
   if (!(await requireAuth(req))) {
     return NextResponse.json({ error: "未登录" }, { status: 401 });
   }
-  if (!deleteMoment(Number(params.id))) {
+  const moment = getMomentAdmin(Number(params.id));
+  if (!moment) {
     return NextResponse.json({ error: "碎碎念不存在" }, { status: 404 });
   }
+  deleteMoment(Number(params.id));
+  deleteUploadedFile(moment.cover);
   return NextResponse.json({ ok: true });
 }

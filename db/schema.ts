@@ -8,6 +8,7 @@ export const posts = sqliteTable("posts", {
   date: text("date").notNull(), // ISO 日期字符串，如 "2026-08-22"
   excerpt: text("excerpt").notNull().default(""),
   content: text("content").notNull(),
+  cover: text("cover").notNull().default(""), // 封面图路径（/uploads/xxx 或外部链接），空串表示无
   published: integer("published", { mode: "boolean" })
     .notNull()
     .default(true),
@@ -21,6 +22,7 @@ export const moments = sqliteTable("moments", {
   slug: text("slug").notNull().unique(),
   date: text("date").notNull(),
   content: text("content").notNull(),
+  cover: text("cover").notNull().default(""), // 封面图路径（/uploads/xxx 或外部链接），空串表示无
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });

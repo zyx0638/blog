@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function PostsPage() {
   return (
-    <div className="mx-auto max-w-2xl px-6">
+    <div className="mx-auto max-w-6xl px-6">
       <h1 className="mb-8 text-3xl font-bold">
         文章
         <span className="mt-2 block h-1 w-12 rounded-full bg-white" />

@@ -47,6 +47,7 @@ export async function POST(req: Request) {
       date,
       excerpt: String(body.excerpt ?? ""),
       content: String(body.content ?? ""),
+      cover: String(body.cover ?? ""),
       published: body.published === undefined ? true : Boolean(body.published),
     });
     return NextResponse.json(post, { status: 201 });

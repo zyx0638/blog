@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import type { AdminPost } from "@/lib/posts";
+import CoverUploader from "@/components/admin/cover-uploader";
 
 const inputClass =
   "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-white/40 focus:outline-none";
@@ -22,6 +23,7 @@ export default function PostEditor({ slug }: { slug?: string }) {
   const [date, setDate] = useState(today());
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
+  const [cover, setCover] = useState("");
   const [published, setPublished] = useState(true);
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(isEditing);
@@ -42,6 +44,7 @@ export default function PostEditor({ slug }: { slug?: string }) {
         setDate(post.date);
         setExcerpt(post.excerpt);
         setContent(post.content);
+        setCover(post.cover);
         setPublished(post.published);
       })
       .catch(() => setError("文章加载失败"))
@@ -63,6 +66,7 @@ export default function PostEditor({ slug }: { slug?: string }) {
             date,
             excerpt,
             content,
+            cover,
             published,
           }),
         }
@@ -134,6 +138,11 @@ export default function PostEditor({ slug }: { slug?: string }) {
           className={inputClass}
         />
       </label>
+
+      <div className="flex flex-col gap-1.5">
+        <span className="text-sm text-gray-400">封面（列表卡片顶部显示，可不上传）</span>
+        <CoverUploader cover={cover} onCoverChange={setCover} />
+      </div>
 
       <label className="flex flex-col gap-1.5">
         <span className="flex items-center justify-between text-sm text-gray-400">

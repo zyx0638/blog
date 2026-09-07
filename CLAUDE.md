@@ -12,7 +12,7 @@
 - `app/` — 页面与 API 路由
   - 前台：`page.tsx`（首页）、`posts/[slug]/`、`moments/`、`gallery/`、`about/`、`projects/`、`hobbies/`
   - 管理端：`admin/login/`、`admin/(panel)/posts|moments|gallery/`
-  - API：`api/admin/login|logout|posts|moments|gallery/`
+  - API：`api/admin/login|logout|posts|moments|gallery|upload/`
   - `uploads/[filename]/route.ts` — 照片墙上传图片的公开读取路由
 - `components/` — `navbar.tsx`、`background.tsx`（前台背景图容器，按路径排除 /admin）、`admin/`（管理端组件）
 - `lib/` — `db.ts`、`auth.ts`、`posts.ts`、`moments.ts`、`gallery.ts`、`uploads.ts`、`site.ts`、`about.ts`
@@ -21,7 +21,9 @@
 ## 图片存放约定（重要）
 
 - **静态资源放 `public/`**，浏览器直接以 URL 根路径访问（如 `public/images/100665843_p0.png` → `/images/100665843_p0.png`）。前台背景图 `.site-bg` 类在 `app/globals.css` 中引用该 URL
-- **照片墙上传图存 `data/uploads/`**（`UPLOAD_DIR` 环境变量可覆盖），经 `/uploads/[filename]` 提供；文件名必须匹配 `lib/uploads.ts` 的 `UPLOAD_NAME_PATTERN`（UUID 格式），手工放置的文件需按该格式命名
+- **上传类图片存 `data/uploads/`**（`UPLOAD_DIR` 环境变量可覆盖），经 `/uploads/[filename]` 提供；文件名必须匹配 `lib/uploads.ts` 的 `UPLOAD_NAME_PATTERN`（UUID 格式），手工放置的文件需按该格式命名
+- 上传统一走 `/api/admin/upload`（通用接口，照片墙接口 `/api/admin/gallery/upload` 与其共用 `lib/uploads.ts` 的 `handleUploadRequest`）；只收 JPEG/PNG/WebP/GIF，上限 10MB
+- 文章/碎碎念封面：posts/moments 表的 `cover` 列存图片路径（空串表示无封面）；PUT 换图/移除封面和 DELETE 时会用 `deleteUploadedFile` 清理旧文件
 
 ## 管理端
 
@@ -45,4 +47,4 @@ npm run db:seed  # 写入种子数据
 - 环境变量：`ADMIN_PASSWORD`、`SESSION_SECRET`（部署前必须设置）
 - `data/` 是挂载卷（`./data:/app/data`），SQLite 和上传图片持久化，重建容器不丢
 - **`public/` 打包进镜像，改动静态资源（如背景图）后必须重新构建镜像才生效**
-- 样式基调：深色低调风格（`--background: #0a0a0a`），统一使用 `.glass` 毛玻璃面板类
+- 样式基调：深色低调风格（`--background: #0a0a0a`），统一使用 `.glass` 毛玻璃面板类；文章列表为双列网格（`md:grid-cols-2`，容器 `max-w-6xl`），卡片顶部通栏显示封面

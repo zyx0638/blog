@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-2xl px-6">
+    <div className="mx-auto max-w-6xl px-6">
       <section className="mb-12 text-center">
         <h1 className="text-4xl font-extrabold tracking-tight text-white">
           {siteConfig.name}

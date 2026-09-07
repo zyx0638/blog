@@ -6,6 +6,7 @@ export interface Moment {
   slug: string;
   date: string;
   content: string;
+  cover: string;
 }
 
 /** 后台使用的碎碎念类型：公开字段 + id */
@@ -17,6 +18,7 @@ const momentFields = {
   slug: moments.slug,
   date: moments.date,
   content: moments.content,
+  cover: moments.cover,
 };
 
 const adminMomentFields = { id: moments.id, ...momentFields };
@@ -35,9 +37,19 @@ export function getAllMomentsAdmin(): AdminMoment[] {
     .all();
 }
 
+/** 后台：按 id 读取碎碎念，不存在时返回 undefined */
+export function getMomentAdmin(id: number): AdminMoment | undefined {
+  return db
+    .select(adminMomentFields)
+    .from(moments)
+    .where(eq(moments.id, id))
+    .get();
+}
+
 export interface MomentInput {
   date: string;
   content: string;
+  cover?: string;
 }
 
 /** 后台：新建碎碎念，slug 自动生成 */
@@ -49,6 +61,7 @@ export function createMoment(input: MomentInput): AdminMoment | undefined {
       slug: `m-${now.replace(/\D/g, "")}`,
       date: input.date,
       content: input.content,
+      cover: input.cover ?? "",
       createdAt: now,
       updatedAt: now,
     })
@@ -61,6 +74,7 @@ export function createMoment(input: MomentInput): AdminMoment | undefined {
     slug: row.slug,
     date: row.date,
     content: row.content,
+    cover: row.cover,
   };
 }
 
@@ -74,6 +88,7 @@ export function updateMoment(
     .set({
       date: input.date,
       content: input.content,
+      cover: input.cover ?? "",
       updatedAt: new Date().toISOString(),
     })
     .where(eq(moments.id, id))
@@ -86,6 +101,7 @@ export function updateMoment(
     slug: row.slug,
     date: row.date,
     content: row.content,
+    cover: row.cover,
   };
 }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { deletePost, getPostBySlugAdmin, updatePost } from "@/lib/posts";
+import { deleteUploadedFile } from "@/lib/uploads";
 
 interface Params {
   params: { slug: string };
@@ -34,16 +35,23 @@ export async function PUT(req: Request, { params }: Params) {
     if (!date) {
       return NextResponse.json({ error: "日期不能为空" }, { status: 400 });
     }
+    const cover = String(body.cover ?? "");
 
+    const existing = getPostBySlugAdmin(params.slug);
     const post = updatePost(params.slug, {
       title,
       date,
       excerpt: String(body.excerpt ?? ""),
       content: String(body.content ?? ""),
+      cover,
       published: body.published === undefined ? true : Boolean(body.published),
     });
     if (!post) {
       return NextResponse.json({ error: "文章不存在" }, { status: 404 });
+    }
+    // 换图或移除封面时，清理旧的本地封面文件
+    if (existing && existing.cover && existing.cover !== cover) {
+      deleteUploadedFile(existing.cover);
     }
     return NextResponse.json(post);
   } catch (e) {
@@ -59,8 +67,11 @@ export async function DELETE(req: Request, { params }: Params) {
   if (!(await requireAuth(req))) {
     return NextResponse.json({ error: "未登录" }, { status: 401 });
   }
-  if (!deletePost(params.slug)) {
+  const post = getPostBySlugAdmin(params.slug);
+  if (!post) {
     return NextResponse.json({ error: "文章不存在" }, { status: 404 });
   }
+  deletePost(params.slug);
+  deleteUploadedFile(post.cover);
   return NextResponse.json({ ok: true });
 }

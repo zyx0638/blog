@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import type { AdminMoment } from "@/lib/moments";
+import CoverUploader from "@/components/admin/cover-uploader";
 
 const inputClass =
   "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-white/40 focus:outline-none";
@@ -19,12 +20,14 @@ export default function MomentsManager() {
   // 新增表单
   const [newDate, setNewDate] = useState(today());
   const [newContent, setNewContent] = useState("");
+  const [newCover, setNewCover] = useState("");
   const [creating, setCreating] = useState(false);
 
   // 内联编辑
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingDate, setEditingDate] = useState("");
   const [editingContent, setEditingContent] = useState("");
+  const [editingCover, setEditingCover] = useState("");
   const [savingId, setSavingId] = useState<number | null>(null);
 
   const [error, setError] = useState("");
@@ -54,11 +57,12 @@ export default function MomentsManager() {
       const res = await fetch("/api/admin/moments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date: newDate, content: newContent }),
+        body: JSON.stringify({ date: newDate, content: newContent, cover: newCover }),
       });
       if (res.ok) {
         setNewContent("");
         setNewDate(today());
+        setNewCover("");
         await load();
       } else {
         const data = await res.json().catch(() => ({}));
@@ -75,6 +79,7 @@ export default function MomentsManager() {
     setEditingId(moment.id);
     setEditingDate(moment.date);
     setEditingContent(moment.content);
+    setEditingCover(moment.cover);
     setError("");
   }
 
@@ -85,7 +90,7 @@ export default function MomentsManager() {
       const res = await fetch(`/api/admin/moments/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date: editingDate, content: editingContent }),
+        body: JSON.stringify({ date: editingDate, content: editingContent, cover: editingCover }),
       });
       if (res.ok) {
         setEditingId(null);
@@ -134,6 +139,10 @@ export default function MomentsManager() {
           placeholder="今天想说点什么？（支持 Markdown）"
           className={inputClass}
         />
+        <div className="flex flex-col gap-1.5">
+          <span className="text-sm text-gray-400">封面（可不上传）</span>
+          <CoverUploader cover={newCover} onCoverChange={setNewCover} />
+        </div>
         {error && <p className="text-sm text-red-400">{error}</p>}
         <button
           type="submit"
@@ -167,6 +176,10 @@ export default function MomentsManager() {
                     rows={3}
                     className={inputClass}
                   />
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-sm text-gray-400">封面</span>
+                    <CoverUploader cover={editingCover} onCoverChange={setEditingCover} />
+                  </div>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -187,6 +200,14 @@ export default function MomentsManager() {
                 </div>
               ) : (
                 <>
+                  {moment.cover && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={moment.cover}
+                      alt=""
+                      className="mb-3 h-32 w-full rounded-xl object-cover"
+                    />
+                  )}
                   <p className="text-sm font-medium text-gray-500">
                     {moment.date}
                   </p>

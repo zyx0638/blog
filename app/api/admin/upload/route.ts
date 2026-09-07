@@ -1,6 +1,6 @@
 import { handleUploadRequest } from "@/lib/uploads";
 
-/** 照片墙图片上传（multipart，字段名 file），逻辑与通用上传接口一致 */
+/** 通用图片上传接口：文章封面、碎碎念封面等使用（multipart，字段名 file） */
 export async function POST(req: Request) {
   return handleUploadRequest(req);
 }

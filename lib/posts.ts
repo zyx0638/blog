@@ -9,6 +9,7 @@ export interface Post {
   date: string;
   excerpt: string;
   content: string;
+  cover: string;
 }
 
 /** 管理后台使用的文章类型：公开字段 + published */
@@ -22,6 +23,7 @@ const postFields = {
   date: posts.date,
   excerpt: posts.excerpt,
   content: posts.content,
+  cover: posts.cover,
 };
 
 const adminPostFields = { ...postFields, published: posts.published };
@@ -66,6 +68,7 @@ export interface PostInput {
   date: string;
   excerpt?: string;
   content: string;
+  cover?: string;
   published?: boolean;
 }
 
@@ -92,6 +95,7 @@ export function createPost(input: PostInput): AdminPost | undefined {
       date: input.date,
       excerpt: input.excerpt ?? "",
       content: input.content,
+      cover: input.cover ?? "",
       published: input.published ?? true,
       createdAt: now,
       updatedAt: now,
@@ -106,6 +110,7 @@ export function createPost(input: PostInput): AdminPost | undefined {
     date: row.date,
     excerpt: row.excerpt,
     content: row.content,
+    cover: row.cover,
     published: row.published,
   };
 }
@@ -122,6 +127,7 @@ export function updatePost(
       date: input.date,
       excerpt: input.excerpt ?? "",
       content: input.content,
+      cover: input.cover ?? "",
       published: input.published ?? true,
       updatedAt: new Date().toISOString(),
     })
@@ -136,6 +142,7 @@ export function updatePost(
     date: row.date,
     excerpt: row.excerpt,
     content: row.content,
+    cover: row.cover,
     published: row.published,
   };
 }
