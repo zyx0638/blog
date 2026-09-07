@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import type { AdminPost } from "@/lib/posts";
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-orange-500 focus:outline-none";
+  "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-white/40 focus:outline-none";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -145,13 +145,13 @@ export default function PostEditor({ slug }: { slug?: string }) {
           <button
             type="button"
             onClick={() => setPreview(!preview)}
-            className="rounded-full px-3 py-1 text-xs text-orange-400 transition-colors hover:bg-orange-500/10"
+            className="rounded-full px-3 py-1 text-xs text-gray-300 transition-colors hover:bg-white/10"
           >
             {preview ? "返回编辑" : "预览"}
           </button>
         </span>
         {preview ? (
-          <div className="prose max-w-none rounded-xl border border-white/10 bg-black/40 px-4 py-3 prose-invert prose-a:text-orange-400">
+          <div className="prose max-w-none rounded-xl border border-white/10 bg-black/40 px-4 py-3 prose-invert prose-a:text-gray-200">
             <ReactMarkdown>{content || "*（暂无内容）*"}</ReactMarkdown>
           </div>
         ) : (
@@ -170,7 +170,7 @@ export default function PostEditor({ slug }: { slug?: string }) {
           type="checkbox"
           checked={published}
           onChange={(e) => setPublished(e.target.checked)}
-          className="h-4 w-4 accent-orange-500"
+          className="h-4 w-4 accent-white"
         />
         发布（不勾选则保存为草稿，前台不可见）
       </label>
@@ -181,7 +181,7 @@ export default function PostEditor({ slug }: { slug?: string }) {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-full bg-orange-500 px-5 py-2 text-sm font-medium text-black shadow-md shadow-orange-500/30 transition-colors hover:bg-orange-400 disabled:opacity-50"
+          className="rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition-colors hover:bg-gray-300 disabled:opacity-50"
         >
           {saving ? "保存中…" : "保存"}
         </button>

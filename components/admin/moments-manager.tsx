@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import type { AdminMoment } from "@/lib/moments";
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-orange-500 focus:outline-none";
+  "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-white/40 focus:outline-none";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -118,7 +118,7 @@ export default function MomentsManager() {
         onSubmit={handleCreate}
         className="glass flex flex-col gap-3 rounded-2xl p-5"
       >
-        <h2 className="font-bold text-orange-400">发布新说说</h2>
+        <h2 className="font-bold text-gray-200">发布新说说</h2>
         <input
           type="date"
           value={newDate}
@@ -138,7 +138,7 @@ export default function MomentsManager() {
         <button
           type="submit"
           disabled={creating}
-          className="self-start rounded-full bg-orange-500 px-4 py-2 text-sm font-medium text-black shadow-md shadow-orange-500/30 transition-colors hover:bg-orange-400 disabled:opacity-50"
+          className="self-start rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-gray-300 disabled:opacity-50"
         >
           {creating ? "发布中…" : "发布"}
         </button>
@@ -172,7 +172,7 @@ export default function MomentsManager() {
                       type="button"
                       disabled={savingId === moment.id}
                       onClick={() => handleUpdate(moment.id)}
-                      className="rounded-full bg-orange-500 px-4 py-1.5 text-sm font-medium text-black transition-colors hover:bg-orange-400 disabled:opacity-50"
+                      className="rounded-full bg-white px-4 py-1.5 text-sm font-medium text-black transition-colors hover:bg-gray-300 disabled:opacity-50"
                     >
                       {savingId === moment.id ? "保存中…" : "保存"}
                     </button>
@@ -187,7 +187,7 @@ export default function MomentsManager() {
                 </div>
               ) : (
                 <>
-                  <p className="font-crt text-sm font-medium text-orange-400">
+                  <p className="text-sm font-medium text-gray-500">
                     {moment.date}
                   </p>
                   <div className="mt-2 text-gray-300">

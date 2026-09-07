@@ -15,7 +15,7 @@ export default function AdminPostsPage() {
         <h1 className="text-2xl font-bold">文章管理</h1>
         <Link
           href="/admin/posts/new"
-          className="rounded-full bg-orange-500 px-4 py-2 text-sm font-medium text-black shadow-md shadow-orange-500/30 transition-colors hover:bg-orange-400"
+          className="rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-gray-300"
         >
           + 新建文章
         </Link>
@@ -35,22 +35,22 @@ export default function AdminPostsPage() {
               <div className="min-w-0">
                 <Link
                   href={`/admin/posts/${post.slug}/edit`}
-                  className="block truncate text-lg font-bold transition-colors hover:text-orange-400"
+                  className="block truncate text-lg font-bold transition-colors hover:text-gray-300"
                 >
                   {post.title}
                 </Link>
-                <p className="font-crt mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500">
                   {post.date} · {post.slug}
                 </p>
               </div>
 
               <div className="flex shrink-0 items-center gap-3">
                 {post.published ? (
-                  <span className="font-crt rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs text-emerald-400">
+                  <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-xs text-gray-200">
                     已发布
                   </span>
                 ) : (
-                  <span className="font-crt rounded-full bg-gray-500/15 px-2.5 py-0.5 text-xs text-gray-400">
+                  <span className="rounded-full bg-gray-500/15 px-2.5 py-0.5 text-xs text-gray-400">
                     草稿
                   </span>
                 )}

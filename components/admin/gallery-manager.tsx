@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AdminPhotoGroup } from "@/lib/gallery";
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-orange-500 focus:outline-none";
+  "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-white/40 focus:outline-none";
 
 /** 待上传文件 + 其预览 URL */
 interface PendingUpload {
@@ -297,7 +297,7 @@ export default function GalleryManager() {
         onSubmit={handleCreateGroup}
         className="glass flex flex-col gap-3 rounded-2xl p-5"
       >
-        <h2 className="font-bold text-orange-400">新建图片组</h2>
+        <h2 className="font-bold text-gray-200">新建图片组</h2>
         <input
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
@@ -324,7 +324,7 @@ export default function GalleryManager() {
           <button
             type="button"
             onClick={() => newFiles.inputRef.current?.click()}
-            className="rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-sm text-orange-300 transition-colors hover:bg-orange-500/20"
+            className="rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm text-gray-200 transition-colors hover:bg-white/20"
           >
             选择本地文件
           </button>
@@ -359,7 +359,7 @@ export default function GalleryManager() {
         <button
           type="submit"
           disabled={creating || busyPhotoGroupId !== null}
-          className="self-start rounded-full bg-orange-500 px-4 py-2 text-sm font-medium text-black shadow-md shadow-orange-500/30 transition-colors hover:bg-orange-400 disabled:opacity-50"
+          className="self-start rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-gray-300 disabled:opacity-50"
         >
           {creating
             ? uploadProgress
@@ -381,7 +381,7 @@ export default function GalleryManager() {
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <h2 className="truncate font-bold">{group.title}</h2>
-                  <p className="font-crt text-sm text-orange-400">
+                  <p className="text-sm text-gray-500">
                     {group.photoCount} 张照片
                   </p>
                 </div>
@@ -414,7 +414,7 @@ export default function GalleryManager() {
                   ))}
                   {group.photos.length > 7 && (
                     <li className="flex aspect-square items-center justify-center rounded-lg bg-black/40">
-                      <span className="font-crt text-xs text-gray-500">
+                      <span className="text-xs text-gray-500">
                         +{group.photos.length - 7}
                       </span>
                     </li>
@@ -462,7 +462,7 @@ export default function GalleryManager() {
 
                   {/* 添加照片 */}
                   <div className="flex flex-col gap-3 rounded-xl border border-white/10 bg-black/30 p-3">
-                    <h3 className="font-crt text-sm text-orange-300">
+                    <h3 className="text-sm text-gray-300">
                       添加照片
                     </h3>
                     <div className="flex flex-wrap items-center gap-2">
@@ -477,7 +477,7 @@ export default function GalleryManager() {
                       <button
                         type="button"
                         onClick={() => editFiles.inputRef.current?.click()}
-                        className="rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-sm text-orange-300 transition-colors hover:bg-orange-500/20"
+                        className="rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm text-gray-200 transition-colors hover:bg-white/20"
                       >
                         选择本地文件
                       </button>
@@ -514,7 +514,7 @@ export default function GalleryManager() {
                             busyPhotoGroupId === group.id || creating
                           }
                           onClick={() => handleAddPhotos(group.id)}
-                          className="rounded-full bg-orange-500 px-4 py-1.5 text-sm font-medium text-black transition-colors hover:bg-orange-400 disabled:opacity-50"
+                          className="rounded-full bg-white px-4 py-1.5 text-sm font-medium text-black transition-colors hover:bg-gray-300 disabled:opacity-50"
                         >
                           {uploadProgress
                             ? `上传中… ${uploadProgress.done}/${uploadProgress.total}`
@@ -526,7 +526,7 @@ export default function GalleryManager() {
 
                   {/* 相册信息 */}
                   <div className="flex flex-col gap-2 rounded-xl border border-white/10 bg-black/30 p-3">
-                    <h3 className="font-crt text-sm text-orange-300">
+                    <h3 className="text-sm text-gray-300">
                       相册信息
                     </h3>
                     <input
@@ -547,7 +547,7 @@ export default function GalleryManager() {
                         type="button"
                         disabled={savingId === group.id}
                         onClick={() => handleUpdateGroup(group.id)}
-                        className="rounded-full bg-orange-500 px-4 py-1.5 text-sm font-medium text-black transition-colors hover:bg-orange-400 disabled:opacity-50"
+                        className="rounded-full bg-white px-4 py-1.5 text-sm font-medium text-black transition-colors hover:bg-gray-300 disabled:opacity-50"
                       >
                         {savingId === group.id ? "保存中…" : "保存"}
                       </button>

@@ -12,11 +12,11 @@ export default function AboutPage() {
     <div className="mx-auto max-w-2xl px-6">
       <h1 className="mb-8 text-3xl font-bold">
         关于
-        <span className="mt-2 block h-1 w-12 rounded-full bg-gradient-to-r from-orange-500 to-amber-400" />
+        <span className="mt-2 block h-1 w-12 rounded-full bg-white" />
       </h1>
 
       <div className="glass rounded-2xl p-6 sm:p-8">
-        <div className="prose max-w-none prose-invert prose-a:text-orange-400">
+        <div className="prose max-w-none prose-invert prose-a:text-gray-200">
           <ReactMarkdown>{about.content}</ReactMarkdown>
         </div>
       </div>

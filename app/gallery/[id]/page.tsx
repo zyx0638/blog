@@ -31,11 +31,11 @@ export default function GalleryDetailPage({ params }: Params) {
 
       <h1 className="text-3xl font-bold">
         {group.title}
-        <span className="mt-2 block h-1 w-12 rounded-full bg-gradient-to-r from-orange-500 to-amber-400" />
+        <span className="mt-2 block h-1 w-12 rounded-full bg-white" />
       </h1>
 
       {group.description && <p className="mt-4 text-gray-400">{group.description}</p>}
-      <p className="font-crt mt-2 text-sm text-orange-400">
+      <p className="mt-2 text-sm text-gray-500">
         {group.photoCount} 张照片
       </p>
 

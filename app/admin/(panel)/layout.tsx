@@ -46,7 +46,7 @@ export default async function AdminPanelLayout({
         </nav>
 
         <div className="flex items-center gap-2">
-          <span className="font-crt text-sm text-orange-400">
+          <span className="text-sm text-gray-400">
             {session.username}
           </span>
           <Link

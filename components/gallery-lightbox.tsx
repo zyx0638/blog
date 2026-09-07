@@ -46,7 +46,7 @@ export default function GalleryLightbox({
               />
             </button>
             {photo.caption && (
-              <figcaption className="font-crt mt-1.5 text-center text-sm text-gray-400">
+              <figcaption className="mt-1.5 text-center text-sm text-gray-400">
                 {photo.caption}
               </figcaption>
             )}
@@ -68,14 +68,14 @@ export default function GalleryLightbox({
             className="max-h-[80vh] max-w-full rounded-xl object-contain shadow-2xl"
           />
           {current.caption && (
-            <p className="font-crt mt-4 text-center text-lg text-orange-300">
+            <p className="mt-4 text-center text-lg text-gray-200">
               {current.caption}
             </p>
           )}
           <button
             type="button"
             onClick={() => setActive(null)}
-            className="font-crt absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-gray-300 transition-colors hover:bg-white/20 hover:text-white"
+            className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-gray-300 transition-colors hover:bg-white/20 hover:text-white"
           >
             关闭
           </button>

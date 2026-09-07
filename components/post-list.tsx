@@ -10,12 +10,12 @@ export default function PostList() {
         <li key={post.slug}>
           <Link
             href={`/posts/${post.slug}`}
-            className="glass group block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-500/20"
+            className="glass group block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/60"
           >
-            <h2 className="crt-glow text-xl font-bold transition-colors group-hover:text-orange-400">
+            <h2 className="text-xl font-bold transition-colors group-hover:text-gray-300">
               {post.title}
             </h2>
-            <p className="font-crt mt-1.5 text-sm text-gray-500">{post.date}</p>
+            <p className="mt-1.5 text-sm text-gray-500">{post.date}</p>
             <p className="mt-3 text-gray-400">{post.excerpt}</p>
           </Link>
         </li>

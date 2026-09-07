@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { siteConfig } from "@/lib/site";
 
 const navItems = [
@@ -24,25 +24,8 @@ function isActivePath(pathname: string, href: string) {
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [crtOn, setCrtOn] = useState(true);
 
-  // 挂载时恢复用户的 CRT 偏好
-  useEffect(() => {
-    if (localStorage.getItem("crt") === "off") {
-      document.documentElement.classList.add("crt-off");
-      setCrtOn(false);
-    }
-  }, []);
-
-  const toggleCrt = () => {
-    const next = !crtOn;
-    setCrtOn(next);
-    document.documentElement.classList.toggle("crt-off", !next);
-    localStorage.setItem("crt", next ? "on" : "off");
-  };
-
-  const activeLinkClass =
-    "bg-orange-500 font-medium text-black shadow-md shadow-orange-500/30";
+  const activeLinkClass = "bg-white font-medium text-black";
   const inactiveLinkClass = "text-gray-400 hover:bg-white/10 hover:text-white";
 
   const pillLinkClass = (href: string) =>
@@ -62,7 +45,7 @@ export default function Navbar() {
         <div className="flex w-full items-center justify-between py-3 pl-7 pr-5 sm:pl-12 sm:pr-8">
           <Link
             href="/"
-            className="bg-gradient-to-r from-orange-500 to-amber-300 bg-clip-text text-2xl font-bold text-transparent"
+            className="text-2xl font-bold text-white"
           >
             {siteConfig.name}
           </Link>
@@ -80,20 +63,6 @@ export default function Navbar() {
                 </Link>
               ))}
             </nav>
-            {/* CRT 效果开关 */}
-            <button
-              type="button"
-              onClick={toggleCrt}
-              aria-pressed={crtOn}
-              title={crtOn ? "关闭 CRT 效果" : "开启 CRT 效果"}
-              className={`font-crt rounded-full px-2.5 py-1 text-base leading-none transition-colors ${
-                crtOn
-                  ? "bg-orange-500/20 text-orange-400 shadow-[0_0_8px_rgba(249,115,22,0.35)]"
-                  : "text-gray-500 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              CRT
-            </button>
 
             {/* 移动端汉堡按钮 */}
             <button
