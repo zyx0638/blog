@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/navbar";
+import Background from "@/components/background";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -33,11 +34,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex min-h-screen flex-col">
+        <Background>
           <Navbar />
 
           <main className="flex-1 py-12">{children}</main>
-        </div>
+        </Background>
       </body>
     </html>
   );
