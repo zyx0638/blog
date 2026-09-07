@@ -20,11 +20,10 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const slug = String(body.slug ?? "").trim();
-    if (!slug) {
-      return NextResponse.json({ error: "slug 不能为空" }, { status: 400 });
-    }
-    if (!SLUG_PATTERN.test(slug)) {
+    // slug 可选：不传时由 createPost 自动生成
+    const slugRaw = String(body.slug ?? "").trim();
+    const slug = slugRaw || undefined;
+    if (slug && !SLUG_PATTERN.test(slug)) {
       return NextResponse.json(
         { error: "slug 只能包含小写字母、数字和连字符，如 my-first-post" },
         { status: 400 }
@@ -38,7 +37,7 @@ export async function POST(req: Request) {
     if (!date) {
       return NextResponse.json({ error: "日期不能为空" }, { status: 400 });
     }
-    if (getPostBySlugAdmin(slug)) {
+    if (slug && getPostBySlugAdmin(slug)) {
       return NextResponse.json({ error: "该 slug 已存在" }, { status: 409 });
     }
 

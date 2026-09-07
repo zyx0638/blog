@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { and, desc, eq } from "drizzle-orm";
 import { posts } from "@/db/schema";
 import { db } from "@/lib/db";
@@ -59,7 +60,8 @@ export function getPostBySlugAdmin(slug: string): AdminPost | undefined {
 }
 
 export interface PostInput {
-  slug: string;
+  /** 可选：不传时自动生成「日期-8位随机字符」格式的 slug */
+  slug?: string;
   title: string;
   date: string;
   excerpt?: string;
@@ -67,13 +69,25 @@ export interface PostInput {
   published?: boolean;
 }
 
-/** 后台：新建文章，slug 重复时返回 undefined */
+/** 自动生成不重复的 slug：日期 + 8 位随机字符，如 2026-09-07-a1b2c3d4 */
+function generateSlug(date: string): string {
+  for (let i = 0; i < 5; i++) {
+    const suffix = randomUUID().replace(/-/g, "").slice(0, 8);
+    const candidate = `${date}-${suffix}`;
+    if (!getPostBySlugAdmin(candidate)) return candidate;
+  }
+  // 理论不会到达：兜底用时间戳
+  return `${date}-${Date.now().toString(36)}`;
+}
+
+/** 后台：新建文章，slug 未传时自动生成，重复时返回 undefined */
 export function createPost(input: PostInput): AdminPost | undefined {
   const now = new Date().toISOString();
+  const slug = input.slug ?? generateSlug(input.date);
   const row = db
     .insert(posts)
     .values({
-      slug: input.slug,
+      slug,
       title: input.title,
       date: input.date,
       excerpt: input.excerpt ?? "",

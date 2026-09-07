@@ -60,7 +60,6 @@ export default function PostEditor({ slug }: { slug?: string }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title,
-            slug: postSlug,
             date,
             excerpt,
             content,
@@ -112,20 +111,17 @@ export default function PostEditor({ slug }: { slug?: string }) {
           />
         </label>
 
-        <label className="flex flex-col gap-1.5 sm:col-span-2">
-          <span className="text-sm text-gray-400">
-            slug（网址后缀，小写字母/数字/连字符）
-          </span>
-          <input
-            type="text"
-            value={postSlug}
-            onChange={(e) => setPostSlug(e.target.value)}
-            required
-            disabled={isEditing}
-            placeholder="如 my-first-post"
-            className={`${inputClass} disabled:opacity-50`}
-          />
-        </label>
+        {isEditing && (
+          <label className="flex flex-col gap-1.5 sm:col-span-2">
+            <span className="text-sm text-gray-400">slug（网址后缀，创建后不可修改）</span>
+            <input
+              type="text"
+              value={postSlug}
+              disabled
+              className={`${inputClass} disabled:opacity-50`}
+            />
+          </label>
+        )}
       </div>
 
       <label className="flex flex-col gap-1.5">
