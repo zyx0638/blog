@@ -5,7 +5,7 @@ export default function PostList() {
   const posts = getAllPosts();
 
   return (
-    <ol className="grid grid-cols-[repeat(auto-fill,400px)] gap-6">
+    <ol className="grid grid-cols-[repeat(auto-fill,352px)] gap-6">
       {posts.map((post) => (
         <li key={post.slug}>
           <Link
