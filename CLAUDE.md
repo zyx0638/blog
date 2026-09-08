@@ -11,11 +11,11 @@
 
 - `app/` — 页面与 API 路由
   - 前台：`page.tsx`（首页）、`posts/[slug]/`、`moments/`、`gallery/`、`about/`、`projects/`、`hobbies/`
-  - 管理端：`admin/login/`、`admin/(panel)/posts|moments|gallery/`
-  - API：`api/admin/login|logout|posts|moments|gallery|upload/`
+  - 管理端：`admin/login/`、`admin/(panel)/posts|moments|gallery|anime/`
+  - API：`api/admin/login|logout|posts|moments|gallery|anime|upload/`
   - `uploads/[filename]/route.ts` — 照片墙上传图片的公开读取路由
 - `components/` — `navbar.tsx`、`background.tsx`（前台背景图容器，按路径排除 /admin）、`admin/`（管理端组件）
-- `lib/` — `db.ts`、`auth.ts`、`posts.ts`、`moments.ts`、`gallery.ts`、`uploads.ts`、`site.ts`、`about.ts`
+- `lib/` — `db.ts`、`auth.ts`、`posts.ts`、`moments.ts`、`gallery.ts`、`uploads.ts`、`site.ts`、`about.ts`、`anime.ts`（番剧 CRUD）、`bangumi.ts`（Bangumi API 封装：搜索/详情/封面下载，支持 `BANGUMI_PROXY` 代理）
 - `scripts/seed.mjs` — 种子数据脚本
 
 ## 图片存放约定（重要）
@@ -44,7 +44,7 @@ npm run db:seed  # 写入种子数据
 ## 部署要点（Docker + 阿里云）
 
 - `Dockerfile` 多阶段构建，运行 `next start`，端口 3000；`docker-compose.yml` 只监听 `127.0.0.1:3000`，对外由 nginx 反代提供 HTTPS
-- 环境变量：`ADMIN_PASSWORD`、`SESSION_SECRET`（部署前必须设置）
+- 环境变量：`ADMIN_PASSWORD`、`SESSION_SECRET`（部署前必须设置）；`BANGUMI_PROXY`（可选，大陆服务器直连 api.bgm.tv 会 DNS 污染，需设代理如 `http://127.0.0.1:7897`）
 - `data/` 是挂载卷（`./data:/app/data`），SQLite 和上传图片持久化，重建容器不丢
 - **`public/` 打包进镜像，改动静态资源（如背景图）后必须重新构建镜像才生效**
 - 样式基调：深色低调风格（`--background: #0a0a0a`），统一使用 `.glass` 毛玻璃面板类；文章列表为双列网格（`md:grid-cols-2`，容器 `max-w-6xl`），卡片顶部通栏显示封面

@@ -36,6 +36,16 @@ export const photoGroups = sqliteTable("photo_groups", {
   updatedAt: text("updated_at").notNull(),
 });
 
+/** 番剧表（数据来自 Bangumi） */
+export const anime = sqliteTable("anime", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  bangumiId: integer("bangumi_id").notNull().unique(), // Bangumi 条目 id，unique 防止重复添加
+  title: text("title").notNull(), // 展示名：name_cn 优先，为空时用原名
+  cover: text("cover").notNull().default(""), // 本地封面路径 /uploads/xxx，空串表示无封面
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 /** 照片墙：组内图片表（src 为 /uploads/xxx 本地路径或外部 http(s) 链接） */
 export const galleryPhotos = sqliteTable(
   "gallery_photos",

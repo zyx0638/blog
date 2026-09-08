@@ -43,6 +43,12 @@ export default async function AdminPanelLayout({
           >
             照片墙
           </Link>
+          <Link
+            href="/admin/anime"
+            className="rounded-full px-3 py-1.5 text-sm text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            番剧
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">

@@ -46,7 +46,7 @@ export function deleteUploadedFile(src: string): void {
 }
 
 /** 单张图片大小上限：10MB */
-const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 /**
  * 上传图片的统一处理器（multipart，字段名 file），返回对外访问路径。
