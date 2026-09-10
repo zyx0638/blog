@@ -8,13 +8,17 @@ export interface GalleryPhoto {
   caption: string;
 }
 
-/** 公开的照片组类型：封面取组内第一张图（插入顺序），无图时为 null */
+/** 卡片堆叠预览最多取几张 */
+const PREVIEW_COUNT = 3;
+
+/** 公开的照片组类型：封面取组内第一张图（插入顺序），无图时为 null；previews 供列表卡片做堆叠预览 */
 export interface PhotoGroup {
   id: number;
   title: string;
   description: string;
   photoCount: number;
   cover: string | null;
+  previews: string[];
 }
 
 /** 后台使用的照片组类型：公开字段 + 组内全部图片 */
@@ -76,6 +80,7 @@ function toPhotoGroup(row: PhotoGroupRow, photos: GalleryPhoto[]): PhotoGroup {
     description: row.description,
     photoCount: photos.length,
     cover: photos[0]?.src ?? null,
+    previews: photos.slice(0, PREVIEW_COUNT).map((p) => p.src),
   };
 }
 
@@ -135,6 +140,7 @@ export function createPhotoGroup(input: PhotoGroupInput): AdminPhotoGroup {
     description: row.description,
     photoCount: 0,
     cover: null,
+    previews: [],
     photos: [],
   };
 }

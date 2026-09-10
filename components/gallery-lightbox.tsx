@@ -28,7 +28,7 @@ export default function GalleryLightbox({
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4">
         {photos.map((photo, i) => (
           <figure key={i} className="group overflow-hidden rounded-xl">
             <button
