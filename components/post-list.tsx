@@ -10,7 +10,7 @@ export default function PostList() {
         <li key={post.slug}>
           <Link
             href={`/posts/${post.slug}`}
-            className="glass group block h-[360px] overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/60"
+            className="glass group block h-[330px] overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/60"
           >
             {post.cover && (
               // eslint-disable-next-line @next/next/no-img-element
