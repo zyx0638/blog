@@ -67,3 +67,13 @@ export const users = sqliteTable("users", {
   username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
 });
+
+/** 关于页表：单行（固定 id=1），头像 / ID / 简介均由管理端维护 */
+export const about = sqliteTable("about", {
+  id: integer("id").primaryKey(), // 固定 1，单行表
+  avatar: text("avatar").notNull().default(""), // 头像路径（/uploads/xxx），空串表示无
+  handle: text("handle").notNull().default(""), // ID：头像右侧展示的昵称/账号名
+  content: text("content").notNull().default(""), // 简介正文（Markdown）
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
