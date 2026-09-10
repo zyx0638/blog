@@ -61,3 +61,131 @@ body {
   background-position: center;
   background-attachment: fixed;
 }
+
+/* ===== 夏夜氛围层：萤火虫 + 流星 =====
+   容器 fixed 覆盖视口（与 .site-bg 的 background-attachment: fixed 对齐）。
+   z-index: -10 让它压在内容下方、却又在背景图之上 —— 这依赖父容器的 isolate
+   （见 components/background.tsx），否则负 z-index 会逃逸到根层叠上下文被背景盖住。
+   挂在该层上的 .glass 面板会通过 backdrop-blur 把飘过的萤火虫一起虚化。 */
+.site-fx {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 萤火虫：外层长时间漂移，内层呼吸式明灭，两层延迟独立以便错开相位 */
+@keyframes firefly-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(var(--drift-x), calc(var(--drift-y) * -1), 0);
+  }
+  50% {
+    transform: translate3d(calc(var(--drift-x) * -0.7), calc(var(--drift-y) * 0.6), 0);
+  }
+  75% {
+    transform: translate3d(calc(var(--drift-x) * 0.5), calc(var(--drift-y) * -0.3), 0);
+  }
+}
+
+@keyframes firefly-glow {
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.site-fx .firefly-track {
+  position: absolute;
+  animation: firefly-drift var(--drift-duration) ease-in-out infinite;
+  animation-delay: var(--drift-delay);
+}
+
+.site-fx .firefly {
+  display: block;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgb(254 240 138 / 0.95) 0%,
+    rgb(190 242 100 / 0.45) 45%,
+    transparent 72%
+  );
+  box-shadow: 0 0 6px 2px rgb(190 242 100 / 0.35);
+  animation: firefly-glow var(--glow-duration) ease-in-out infinite;
+  animation-delay: var(--glow-delay);
+}
+
+/* 流星：位移放在外层轨道，旋转留在内层 —— 否则关键帧里的 transform 会覆盖掉 rotate */
+@keyframes meteor-fly {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 1;
+  }
+  24% {
+    transform: translate3d(var(--meteor-x), var(--meteor-y), 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(var(--meteor-x), var(--meteor-y), 0);
+    opacity: 0;
+  }
+}
+
+.site-fx .meteor-track {
+  /* 飞行位移：向左下。垂直分量必须压得很小 —— 它与起点 top、拖尾自身下沉量三者相加
+     决定了流星的垂直跨度，合计要留在屏幕上方 1/6 以内（详见 background.tsx 的 METEORS） */
+  --meteor-x: -45vw;
+  --meteor-y: 7vh;
+  position: absolute;
+  opacity: 0;
+  animation: meteor-fly var(--meteor-duration) linear infinite;
+  animation-delay: var(--meteor-delay);
+}
+
+.site-fx .meteor {
+  display: block;
+  width: var(--meteor-length);
+  height: 2px;
+  border-radius: 9999px;
+  /* transform-origin 取左端 + rotate(135deg)：拖尾朝右下、亮头指向左下，顺着飞行方向 */
+  transform: rotate(170deg);
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0) 0%,
+    rgb(255 255 255 / 0.2) 50%,
+    rgb(255 255 255 / 0.95) 100%
+  );
+  filter: drop-shadow(0 0 6px rgb(255 255 255 / 0.75));
+}
+
+/* 尊重系统的"减少动态效果"：萤火虫改为静止常亮，流星是纯动效故直接隐藏 */
+@media (prefers-reduced-motion: reduce) {
+  .site-fx .firefly-track,
+  .site-fx .firefly {
+    animation: none;
+  }
+  .site-fx .firefly {
+    opacity: 0.5;
+  }
+  .site-fx .meteor-track {
+    display: none;
+  }
+}
