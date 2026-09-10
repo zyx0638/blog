@@ -26,6 +26,31 @@ body {
   .glass {
     @apply border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/40;
   }
+
+  /* 唱片旋转：12s/圈，播放暂停用 animation-play-state 联动 */
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+  }
+
+  /* 音乐页轻提示：底部居中淡入上移（left-1/2 + -translate-x-1/2 水平居中） */
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 8px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+  .animate-toast-in {
+    animation: toast-in 0.25s ease-out;
+  }
 }
 
 /* 前台背景图：固定 + 暗色蒙层（低调风格，蒙层透明度可在此调整） */

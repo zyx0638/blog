@@ -10,12 +10,12 @@
 ## 目录结构
 
 - `app/` — 页面与 API 路由
-  - 前台：`page.tsx`（首页）、`posts/[slug]/`、`moments/`、`gallery/`、`about/`、`projects/`、`hobbies/`
+  - 前台：`page.tsx`（首页）、`posts/[slug]/`、`moments/`、`gallery/`、`about/`、`projects/`、`hobbies/`、`music/`（音乐播放器）
   - 管理端：`admin/login/`、`admin/(panel)/posts|moments|gallery|anime/`
-  - API：`api/admin/login|logout|posts|moments|gallery|anime|upload/`
+  - API：`api/admin/login|logout|posts|moments|gallery|anime|upload/`、`api/music/playlist|song/`（音乐模块公开接口）
   - `uploads/[filename]/route.ts` — 照片墙上传图片的公开读取路由
-- `components/` — `navbar.tsx`、`background.tsx`（前台背景图容器，按路径排除 /admin）、`admin/`（管理端组件）
-- `lib/` — `db.ts`、`auth.ts`、`posts.ts`、`moments.ts`、`gallery.ts`、`uploads.ts`、`site.ts`、`about.ts`、`anime.ts`（番剧 CRUD）、`bangumi.ts`（Bangumi API 封装：搜索/详情/封面下载，支持 `BANGUMI_PROXY` 代理）
+- `components/` — `navbar.tsx`、`background.tsx`（前台背景图容器，按路径排除 /admin）、`admin/`（管理端组件）、`music/`（音乐播放器组件）
+- `lib/` — `db.ts`、`auth.ts`、`posts.ts`、`moments.ts`、`gallery.ts`、`uploads.ts`、`site.ts`、`about.ts`、`anime.ts`（番剧 CRUD）、`bangumi.ts`（Bangumi API 封装：搜索/详情/封面下载，支持 `BANGUMI_PROXY` 代理）、`qqmusic.ts`（QQ 音乐接口封装：歌单/播放链接/歌词，支持 `MUSIC_PROXY` 代理）、`music.ts`（音乐模块纯函数：Song 类型/LRC 解析/渐变生成）
 - `scripts/seed.mjs` — 种子数据脚本
 
 ## 图片存放约定（重要）
@@ -44,7 +44,9 @@ npm run db:seed  # 写入种子数据
 ## 部署要点（Docker + 阿里云）
 
 - `Dockerfile` 多阶段构建，运行 `next start`，端口 3000；`docker-compose.yml` 只监听 `127.0.0.1:3000`，对外由 nginx 反代提供 HTTPS
-- 环境变量：`ADMIN_PASSWORD`、`SESSION_SECRET`（部署前必须设置）；`BANGUMI_PROXY`（可选，大陆服务器直连 api.bgm.tv 会 DNS 污染，需设代理如 `http://127.0.0.1:7897`）
+- 环境变量：`ADMIN_PASSWORD`、`SESSION_SECRET`（部署前必须设置）；`BANGUMI_PROXY`（可选，大陆服务器直连 api.bgm.tv 会 DNS 污染，需设代理如 `http://127.0.0.1:7897`）；`MUSIC_PROXY`（可选，QQ 音乐接口代理，服务器直连可用）
+- 音乐模块：歌单 ID 配置在 `lib/site.ts` 的 `musicPlaylistId`（改后需重新构建）；QQ 音乐接口无 CORS 且必须带 Referer，全部经服务端 `/api/music/*` 代理，播放链接/歌词带进程内缓存
+- **QQ 音乐限流**：歌单接口（DissInfoServer）对匿名高频查询按 IP 限流（code 10004/10006，触发后数分钟到数小时恢复）。`lib/qqmusic.ts` 已做缓解：歌单缓存 30min、失败 5s 重试一次、自动回落 `uniform_get_Dissinfo` 备用接口。联调时不要频繁刷新/压测歌单接口，否则本机 IP 会被封一段时间
 - `data/` 是挂载卷（`./data:/app/data`），SQLite 和上传图片持久化，重建容器不丢
 - **`public/` 打包进镜像，改动静态资源（如背景图）后必须重新构建镜像才生效**
 - 样式基调：深色低调风格（`--background: #0a0a0a`），统一使用 `.glass` 毛玻璃面板类；文章列表为双列网格（`md:grid-cols-2`，容器 `max-w-6xl`），卡片顶部通栏显示封面

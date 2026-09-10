@@ -20,7 +20,7 @@ export default function PostList() {
                 className="aspect-[16/9] w-full object-cover"
               />
             )}
-            <div className="p-6">
+          <div className="p-6">
               <h2 className="text-xl font-bold transition-colors group-hover:text-gray-300">
                 {post.title}
               </h2>

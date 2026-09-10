@@ -12,6 +12,7 @@ const navItems = [
   { href: "/gallery", label: "照片墙" },
   { href: "/projects", label: "项目" },
   { href: "/hobbies", label: "爱好" },
+  { href: "/music", label: "音乐" },
   { href: "/about", label: "关于" },
   { href: "/admin", label: "管理端" },
 ];
