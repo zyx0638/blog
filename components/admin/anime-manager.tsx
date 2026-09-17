@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import type { AdminAnime } from "@/lib/anime";
 import type { AnimeSearchItem } from "@/lib/bangumi";
-
 const inputClass =
   "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-2 text-white placeholder-gray-600 transition-colors focus:border-white/40 focus:outline-none";
 

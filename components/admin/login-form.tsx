@@ -1,10 +1,10 @@
-"use client";
+"use client";//声明这是一个客户端
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";//跳转页面用
 import { useState } from "react";
 
 export default function LoginForm() {
-  const router = useRouter();
+  const router = useRouter();//userouter返回值是个对象
   const [username, setUsername] = useState("admin");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

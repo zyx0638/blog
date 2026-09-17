@@ -215,7 +215,7 @@ export async function getPlaylistDetail(disstid: string): Promise<QQPlaylist> {
         "music.srfDissInfo.aiDissInfo",
         "uniform_get_Dissinfo",
         {
-          disstid,
+          disstid: Number(disstid),
           enc_host_uin: "",
           tag: 1,
           userinfo: 1,
@@ -234,7 +234,7 @@ export async function getPlaylistDetail(disstid: string): Promise<QQPlaylist> {
       "srf_diss_info.DissInfoServer",
       "CgiGetDiss",
       // uin 必填：不带 uin 时该接口会返回 code 10004（实测）
-      { disstid, onlysonglist: 0, song_begin: begin, song_num: 100, uin: "0" }
+      { disstid: Number(disstid), onlysonglist: 0, song_begin: begin, song_num: 100, uin: "0" }
     );
     return {
       list: data.songlist ?? [],
@@ -351,6 +351,7 @@ export function coverUrl(
   size: "r300" | "r90" = "r300"
 ): string {
   if (!albummid) return "";
-  const s = size.toUpperCase();
-  return `https://y.gtimg.cn/music/photo_new/T002${s}x${s}M000${albummid}.jpg`;
+  // 路径格式为 T002R300x300M000<albummid>.jpg：R 只出现一次，尺寸为纯数字
+  const px = size === "r90" ? "90" : "300";
+  return `https://y.gtimg.cn/music/photo_new/T002R${px}x${px}M000${albummid}.jpg`;
 }

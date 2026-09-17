@@ -18,7 +18,7 @@ export default async function AdminPanelLayout({
   const token = cookies().get(SESSION_COOKIE)?.value;
   const session = token ? await verifySessionToken(token) : null;
   if (!session) {
-    redirect("/admin/login");
+    redirect("/admin/login");// 跳转登录页
   }
 
   return (
