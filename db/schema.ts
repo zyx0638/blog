@@ -16,7 +16,7 @@ export const posts = sqliteTable("posts", {
   updatedAt: text("updated_at").notNull(),
 });
 
-/** 碎碎念表 */
+/** 说说表 */
 export const moments = sqliteTable("moments", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),

@@ -35,7 +35,7 @@ export default async function AdminPanelLayout({
             href="/admin/moments"
             className="rounded-full px-3 py-1.5 text-sm text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
           >
-            碎碎念
+            说说
           </Link>
           <Link
             href="/admin/gallery"

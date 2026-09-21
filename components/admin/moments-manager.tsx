@@ -12,7 +12,7 @@ function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-/** 碎碎念管理：列表 + 新增 + 内联编辑/删除 */
+/** 说说管理：列表 + 新增 + 内联编辑/删除 */
 export default function MomentsManager() {
   const [moments, setMoments] = useState<AdminMoment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,7 +107,7 @@ export default function MomentsManager() {
   }
 
   async function handleDelete(id: number) {
-    if (!window.confirm("确认删除这条碎碎念？")) return;
+    if (!window.confirm("确认删除这条说说？")) return;
     await fetch(`/api/admin/moments/${id}`, { method: "DELETE" });
     await load();
   }
@@ -156,7 +156,7 @@ export default function MomentsManager() {
       {/* 已有说说 */}
       {moments.length === 0 ? (
         <p className="glass rounded-2xl p-8 text-center text-gray-500">
-          还没有碎碎念，发一条吧
+          还没有说说，发一条吧
         </p>
       ) : (
         <ul className="flex flex-col gap-3">

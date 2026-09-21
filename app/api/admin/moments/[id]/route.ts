@@ -7,7 +7,7 @@ interface Params {
   params: { id: string };
 }
 
-/** 更新碎碎念 */
+/** 更新说说 */
 export async function PUT(req: Request, { params }: Params) {
   if (!(await requireAuth(req))) {
     return NextResponse.json({ error: "未登录" }, { status: 401 });
@@ -28,7 +28,7 @@ export async function PUT(req: Request, { params }: Params) {
     const existing = getMomentAdmin(Number(params.id));
     const moment = updateMoment(Number(params.id), { date, content, cover });
     if (!moment) {
-      return NextResponse.json({ error: "碎碎念不存在" }, { status: 404 });
+      return NextResponse.json({ error: "说说不存在" }, { status: 404 });
     }
     // 换图或移除封面时，清理旧的本地封面文件
     if (existing && existing.cover && existing.cover !== cover) {
@@ -43,14 +43,14 @@ export async function PUT(req: Request, { params }: Params) {
   }
 }
 
-/** 删除碎碎念 */
+/** 删除说说 */
 export async function DELETE(req: Request, { params }: Params) {
   if (!(await requireAuth(req))) {
     return NextResponse.json({ error: "未登录" }, { status: 401 });
   }
   const moment = getMomentAdmin(Number(params.id));
   if (!moment) {
-    return NextResponse.json({ error: "碎碎念不存在" }, { status: 404 });
+    return NextResponse.json({ error: "说说不存在" }, { status: 404 });
   }
   deleteMoment(Number(params.id));
   deleteUploadedFile(moment.cover);

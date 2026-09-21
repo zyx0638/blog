@@ -66,7 +66,7 @@ if (fs.existsSync(postsDir)) {
 }
 console.log(`✅ 文章导入完成：新增 ${postCount} 篇`);
 
-// ---------- 导入碎碎念 ----------
+// ---------- 导入说说 ----------
 const insertMoment = db.prepare(`
   INSERT OR IGNORE INTO moments (slug, date, content, created_at, updated_at)
   VALUES (@slug, @date, @content, @createdAt, @updatedAt)
@@ -93,7 +93,7 @@ if (fs.existsSync(momentsDir)) {
     if (result.changes > 0) momentCount++;
   }
 }
-console.log(`✅ 碎碎念导入完成：新增 ${momentCount} 条`);
+console.log(`✅ 说说导入完成：新增 ${momentCount} 条`);
 
 // ---------- 创建管理员账号（仅首次） ----------
 const userCount = db.prepare("SELECT COUNT(*) AS n FROM users").get().n;

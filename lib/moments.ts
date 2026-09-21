@@ -9,7 +9,7 @@ export interface Moment {
   cover: string;
 }
 
-/** 后台使用的碎碎念类型：公开字段 + id */
+/** 后台使用的说说类型：公开字段 + id */
 export interface AdminMoment extends Moment {
   id: number;
 }
@@ -23,12 +23,12 @@ const momentFields = {
 
 const adminMomentFields = { id: moments.id, ...momentFields };
 
-/** 读取所有碎碎念，按日期倒序排列 */
+/** 读取所有说说，按日期倒序排列 */
 export function getAllMoments(): Moment[] {
   return db.select(momentFields).from(moments).orderBy(desc(moments.date)).all();
 }
 
-/** 后台：读取所有碎碎念（含 id），按日期倒序 */
+/** 后台：读取所有说说（含 id），按日期倒序 */
 export function getAllMomentsAdmin(): AdminMoment[] {
   return db
     .select(adminMomentFields)
@@ -37,7 +37,7 @@ export function getAllMomentsAdmin(): AdminMoment[] {
     .all();
 }
 
-/** 后台：按 id 读取碎碎念，不存在时返回 undefined */
+/** 后台：按 id 读取说说，不存在时返回 undefined */
 export function getMomentAdmin(id: number): AdminMoment | undefined {
   return db
     .select(adminMomentFields)
@@ -52,7 +52,7 @@ export interface MomentInput {
   cover?: string;
 }
 
-/** 后台：新建碎碎念，slug 自动生成 */
+/** 后台：新建说说，slug 自动生成 */
 export function createMoment(input: MomentInput): AdminMoment | undefined {
   const now = new Date().toISOString();
   const row = db
@@ -78,7 +78,7 @@ export function createMoment(input: MomentInput): AdminMoment | undefined {
   };
 }
 
-/** 后台：更新碎碎念，不存在时返回 undefined */
+/** 后台：更新说说，不存在时返回 undefined */
 export function updateMoment(
   id: number,
   input: MomentInput
@@ -105,7 +105,7 @@ export function updateMoment(
   };
 }
 
-/** 后台：删除碎碎念，返回是否删除成功 */
+/** 后台：删除说说，返回是否删除成功 */
 export function deleteMoment(id: number): boolean {
   const result = db.delete(moments).where(eq(moments.id, id)).run();
   return result.changes > 0;

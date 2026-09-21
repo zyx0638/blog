@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 
 /**
- * 封面上传控件：预览 + 上传 + 更换/移除，供文章与碎碎念编辑器复用。
+ * 封面上传控件：预览 + 上传 + 更换/移除，供文章与说说编辑器复用。
  * 上传走通用接口 /api/admin/upload，返回 /uploads/ 路径由 onCoverChange 回调给父组件。
  */
 export default function CoverUploader({

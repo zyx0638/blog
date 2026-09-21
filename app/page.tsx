@@ -1,20 +1,59 @@
-import PostList from "@/components/post-list";
+import FeaturedContentCard from "@/components/home/featured-content-card";
+import GalleryPreviewCard from "@/components/home/gallery-preview-card";
+import ProfileCard from "@/components/home/profile-card";
+import QuickLinksCard from "@/components/home/quick-links-card";
+import { getAbout } from "@/lib/about";
+import { getAllPhotoGroups } from "@/lib/gallery";
+import { getAllMoments } from "@/lib/moments";
+import { getAllPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/site";
 
-// 文章存数据库，按请求渲染，保证后台发布后立即生效
+// 首页内容来自数据库，后台更新后应立即反映到前台。
 export const dynamic = "force-dynamic";
 
 export default function Home() {
+  const about = getAbout();
+  const posts = getAllPosts();
+  const moments = getAllMoments();
+  const photoGroups = getAllPhotoGroups();
+  const photoCount = photoGroups.reduce(
+    (total, group) => total + group.photoCount,
+    0
+  );
+  const featuredPhotoGroup =
+    photoGroups.find((group) => group.previews.length > 0) ?? photoGroups[0];
+
   return (
     <div className="mx-auto max-w-6xl px-6">
-      <section className="mb-12 text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight text-white">
+      <header className="mb-8 max-w-3xl">
+        <h1 className="text-3xl font-bold text-white sm:text-4xl">
           {siteConfig.name}
         </h1>
         <p className="mt-3 text-gray-400">{siteConfig.description}</p>
-      </section>
+      </header>
 
-      <PostList />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="lg:col-span-8">
+          <ProfileCard
+            about={about}
+            postCount={posts.length}
+            momentCount={moments.length}
+            photoCount={photoCount}
+          />
+        </div>
+
+        <div className="lg:col-span-4">
+          <QuickLinksCard />
+        </div>
+
+        <div className="lg:col-span-7">
+          <FeaturedContentCard post={posts[0]} moment={moments[0]} />
+        </div>
+
+        <div className="lg:col-span-5">
+          <GalleryPreviewCard group={featuredPhotoGroup} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { createMoment, getAllMomentsAdmin } from "@/lib/moments";
 
-/** 列出所有碎碎念 */
+/** 列出所有说说 */
 export async function GET(req: Request) {
   if (!(await requireAuth(req))) {
     return NextResponse.json({ error: "未登录" }, { status: 401 });
@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   return NextResponse.json(getAllMomentsAdmin());
 }
 
-/** 新建碎碎念 */
+/** 新建说说 */
 export async function POST(req: Request) {
   if (!(await requireAuth(req))) {
     return NextResponse.json({ error: "未登录" }, { status: 401 });
