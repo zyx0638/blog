@@ -21,6 +21,7 @@ export async function GET() {
     const list = await getPlaylistDetail(disstid);
     const songs: Song[] = list.songs.map((s) => ({
       songmid: s.songmid,
+      mediaMid: s.mediaMid,
       title: s.title,
       artist: s.artist,
       interval: s.interval,

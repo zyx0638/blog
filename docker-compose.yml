@@ -9,6 +9,9 @@ services:
       # 部署前务必改成自己的值（与本地 .env.local 无关）
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       SESSION_SECRET: ${SESSION_SECRET}
+      # 可选：QQ 音乐会员播放凭据（不要提交到仓库）
+      MUSIC_COOKIE: ${MUSIC_COOKIE:-}
+      MUSIC_UIN: ${MUSIC_UIN:-}
     volumes:
       # SQLite 数据库文件必须挂卷，否则容器重建数据丢失
       - ./data:/app/data

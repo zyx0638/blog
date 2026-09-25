@@ -44,7 +44,7 @@ npm run db:seed  # 写入种子数据
 ## 部署要点（Docker + 阿里云）
 
 - `Dockerfile` 多阶段构建，运行 `next start`，端口 3000；`docker-compose.yml` 只监听 `127.0.0.1:3000`，对外由 nginx 反代提供 HTTPS
-- 环境变量：`ADMIN_PASSWORD`、`SESSION_SECRET`（部署前必须设置）；`BANGUMI_PROXY`（可选，大陆服务器直连 api.bgm.tv 会 DNS 污染，需设代理如 `http://127.0.0.1:7897`）；`MUSIC_PROXY`（可选，QQ 音乐接口代理，服务器直连可用）
+- 环境变量：`ADMIN_PASSWORD`、`SESSION_SECRET`（部署前必须设置）；`BANGUMI_PROXY`（可选，大陆服务器直连 api.bgm.tv 会 DNS 污染，需设代理如 `http://127.0.0.1:7897`）；`MUSIC_PROXY`（可选，QQ 音乐接口代理，服务器直连可用）；`MUSIC_COOKIE` + `MUSIC_UIN`（可选，服务端携带 QQ 音乐会员登录态获取 VIP 播放链接）
 - 音乐模块：歌单 ID 配置在 `lib/site.ts` 的 `musicPlaylistId`（改后需重新构建）；QQ 音乐接口无 CORS 且必须带 Referer，全部经服务端 `/api/music/*` 代理，播放链接/歌词带进程内缓存
 - **QQ 音乐限流**：歌单接口（DissInfoServer）对匿名高频查询按 IP 限流（code 10004/10006，触发后数分钟到数小时恢复）。`lib/qqmusic.ts` 已做缓解：歌单缓存 30min、失败 5s 重试一次、自动回落 `uniform_get_Dissinfo` 备用接口。联调时不要频繁刷新/压测歌单接口，否则本机 IP 会被封一段时间
 - `data/` 是挂载卷（`./data:/app/data`），SQLite 和上传图片持久化，重建容器不丢

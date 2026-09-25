@@ -17,6 +17,12 @@ interface SongDetail {
   blocked: boolean;
 }
 
+function songDetailUrl(song: Pick<Song, "songmid" | "mediaMid">): string {
+  const params = new URLSearchParams({ mid: song.songmid });
+  if (song.mediaMid) params.set("mediaMid", song.mediaMid);
+  return `/api/music/song?${params.toString()}`;
+}
+
 type PlaylistState = "loading" | "ready" | "error" | "not-configured" | "empty";
 
 /**
@@ -145,9 +151,7 @@ export default function MusicPlayer() {
     setFetchingDetail(true);
     (async () => {
       try {
-        const res = await fetch(`/api/music/song?mid=${encodeURIComponent(mid)}`, {
-          cache: "no-store",
-        });
+        const res = await fetch(songDetailUrl(meta), { cache: "no-store" });
         const data = await res.json();
         if (currentMidRef.current !== mid) return; // 期间已切到别的歌，丢弃
         const detail: SongDetail = {
@@ -253,7 +257,7 @@ export default function MusicPlayer() {
     const next = pickNextIndex(currentIndex, songs.length, playMode);
     const mid = songs[next]?.songmid;
     if (!mid || detailMapRef.current.has(mid)) return;
-    fetch(`/api/music/song?mid=${encodeURIComponent(mid)}`, { cache: "no-store" })
+    fetch(songDetailUrl(songs[next]), { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (d.url !== undefined) {

@@ -26,18 +26,24 @@ function ModeIcon({ mode }: { mode: PlayMode }) {
  * 唱片封面层：真实封面图（浏览器直连 y.gtimg.cn），
  * URL 为空或加载失败回退 CSS 渐变。随唱片 key 切歌重挂载，本地失败状态自动复位。
  */
-function DiscCover({ song }: { song: Song }) {
+export function SongCover({
+  song,
+  className,
+}: {
+  song: Song;
+  className?: string;
+}) {
   const [failed, setFailed] = useState(false);
   if (!song.cover.url || failed) {
     return (
       <div
-        className="absolute inset-[16%] rounded-full ring-1 ring-white/10"
+        className={className}
         style={{ background: song.cover.gradient }}
       />
     );
   }
   return (
-    <div className="absolute inset-[16%] overflow-hidden rounded-full bg-[#1c1c1c] ring-1 ring-white/10">
+    <div className={className}>
       <img
         src={song.cover.url}
         alt=""
@@ -47,6 +53,52 @@ function DiscCover({ song }: { song: Song }) {
         className="h-full w-full object-cover"
         onError={() => setFailed(true)}
       />
+    </div>
+  );
+}
+
+function DiscCover({ song }: { song: Song }) {
+  return (
+    <SongCover
+      song={song}
+      className="absolute inset-[16%] overflow-hidden rounded-full bg-[#1c1c1c] ring-1 ring-white/10"
+    />
+  );
+}
+
+function VinylDisc({
+  song,
+  isPlaying,
+  switching,
+  className,
+}: {
+  song: Song;
+  isPlaying: boolean;
+  switching?: boolean;
+  className: string;
+}) {
+  return (
+    <div
+      className={`animate-spin-slow relative aspect-square rounded-full shadow-xl shadow-black/60 ring-1 ring-white/10 transition-opacity ${className} ${
+        isPlaying ? "" : "[animation-play-state:paused]"
+      } ${switching ? "animate-pulse opacity-60" : ""}`}
+    >
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background:
+            "repeating-radial-gradient(circle at center, #1c1c1c 0px, #1c1c1c 2px, #262626 3px, #1c1c1c 4px)",
+        }}
+      />
+      <DiscCover song={song} />
+      <div
+        className="absolute inset-[16%] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 30% 25%, rgb(255 255 255 / 0.25), transparent 55%)",
+        }}
+      />
+      <div className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-[#0a0a0a] sm:h-4 sm:w-4" />
     </div>
   );
 }
@@ -64,6 +116,7 @@ export default function PlayerCard({
   onNext,
   onSeek,
   onCycleMode,
+  variant = "full",
 }: {
   song: Song;
   isPlaying: boolean;
@@ -77,6 +130,7 @@ export default function PlayerCard({
   onNext: () => void;
   onSeek: (time: number) => void;
   onCycleMode: () => void;
+  variant?: "full" | "compact";
 }) {
   const draggingRef = useRef(false);
 
@@ -87,37 +141,105 @@ export default function PlayerCard({
 
   const percent = duration ? (currentTime / duration) * 100 : 0;
 
+  if (variant === "compact") {
+    return (
+      <div className="mt-5">
+        <div className="flex min-w-0 items-center gap-4">
+          <div
+            key={song.songmid}
+            className="shrink-0"
+          >
+            <VinylDisc
+              song={song}
+              isPlaying={isPlaying}
+              switching={switching}
+              className="h-24 w-24 sm:h-28 sm:w-28"
+            />
+          </div>
+          <div className="min-w-0">
+            <h2 className="truncate text-lg font-semibold text-white">
+              {song.title}
+            </h2>
+            <p className="mt-1 truncate text-sm text-gray-400">{song.artist}</p>
+          </div>
+        </div>
+
+        <div className="mt-5 flex items-center gap-3">
+          <span className="w-9 text-right text-xs tabular-nums text-gray-500">
+            {formatTime(currentTime)}
+          </span>
+          <div
+            role="slider"
+            aria-label="播放进度"
+            aria-valuemin={0}
+            aria-valuemax={Math.round(duration)}
+            aria-valuenow={Math.round(currentTime)}
+            className="group relative h-1.5 flex-1 cursor-pointer touch-none rounded-full bg-white/10"
+            onPointerDown={(event) => {
+              const rect = event.currentTarget.getBoundingClientRect();
+              const ratio = Math.min(
+                1,
+                Math.max(0, (event.clientX - rect.left) / rect.width)
+              );
+              onSeek(ratio * duration);
+            }}
+          >
+            <div
+              className="absolute inset-y-0 left-0 rounded-full bg-white/80"
+              style={{ width: `${percent}%` }}
+            />
+            <div
+              className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white opacity-0 transition-opacity group-hover:opacity-100"
+              style={{ left: `${percent}%` }}
+            />
+          </div>
+          <span className="w-9 text-xs tabular-nums text-gray-500">
+            {formatTime(duration)}
+          </span>
+        </div>
+
+        <div className="mt-4 flex items-center justify-center gap-6">
+          <button
+            type="button"
+            onClick={onPrev}
+            aria-label="上一首"
+            className="rounded-full p-2 text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <PrevIcon size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={onTogglePlay}
+            aria-label={isPlaying ? "暂停" : "播放"}
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-transform hover:scale-105 hover:bg-gray-200 disabled:cursor-wait disabled:opacity-60"
+            disabled={switching}
+          >
+            {isPlaying ? <PauseIcon size={20} /> : <PlayIcon size={20} />}
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            aria-label="下一首"
+            className="rounded-full p-2 text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <NextIcon size={18} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section className="glass flex flex-col rounded-2xl p-6">
       {/* 唱片：key 保证切歌时重挂载，动画从头开始（有换碟感） */}
       <div className="flex flex-1 items-center justify-center py-4">
-        <div
+        <VinylDisc
           key={song.songmid}
-          className={`animate-spin-slow relative aspect-square w-48 rounded-full shadow-xl shadow-black/60 ring-1 ring-white/10 transition-opacity sm:w-52 ${
-            isPlaying ? "" : "[animation-play-state:paused]"
-          } ${switching ? "opacity-60 animate-pulse" : ""}`}
-        >
-          {/* 盘面纹理 */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background:
-                "repeating-radial-gradient(circle at center, #1c1c1c 0px, #1c1c1c 2px, #262626 3px, #1c1c1c 4px)",
-            }}
-          />
-          {/* 封面：真实图片，失败回退渐变（见 DiscCover） */}
-          <DiscCover song={song} />
-          {/* 高光 */}
-          <div
-            className="absolute inset-[16%] rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 25%, rgb(255 255 255 / 0.25), transparent 55%)",
-            }}
-          />
-          {/* 中心孔 */}
-          <div className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-[#0a0a0a]" />
-        </div>
+          song={song}
+          isPlaying={isPlaying}
+          switching={switching}
+          className="w-48 sm:w-52"
+        />
       </div>
 
       {/* 歌曲信息 */}

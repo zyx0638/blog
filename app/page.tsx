@@ -1,7 +1,7 @@
 import FeaturedContentCard from "@/components/home/featured-content-card";
 import GalleryPreviewCard from "@/components/home/gallery-preview-card";
 import ProfileCard from "@/components/home/profile-card";
-import QuickLinksCard from "@/components/home/quick-links-card";
+import HomeMusicCard from "@/components/home/home-music-card";
 import { getAbout } from "@/lib/about";
 import { getAllPhotoGroups } from "@/lib/gallery";
 import { getAllMoments } from "@/lib/moments";
@@ -43,7 +43,7 @@ export default function Home() {
         </div>
 
         <div className="lg:col-span-6">
-          <QuickLinksCard />
+          <HomeMusicCard />
         </div>
 
         <div className="lg:col-span-6">

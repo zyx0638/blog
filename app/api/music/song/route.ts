@@ -9,14 +9,18 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(req: Request) {
   const mid = new URL(req.url).searchParams.get("mid")?.trim() ?? "";
+  const mediaMid = new URL(req.url).searchParams.get("mediaMid")?.trim() ?? "";
   // 白名单校验，防任意字符串透传 QQ 网关
   if (!/^[A-Za-z0-9]{1,64}$/.test(mid)) {
     return NextResponse.json({ error: "无效的歌曲 ID" }, { status: 400 });
   }
+  if (mediaMid && !/^[A-Za-z0-9]{1,64}$/.test(mediaMid)) {
+    return NextResponse.json({ error: "无效的媒体歌曲 ID" }, { status: 400 });
+  }
 
   try {
     const [urlMap, lyric] = await Promise.all([
-      getSongVkeys([mid]),
+      getSongVkeys([mid], mediaMid ? new Map([[mid, mediaMid]]) : undefined),
       getSongLyric(mid),
     ]);
     const url = urlMap.get(mid) ?? "";

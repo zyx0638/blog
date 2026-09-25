@@ -7,6 +7,8 @@
 export interface Song {
   /** QQ 音乐全局唯一歌曲 ID（原 demo 的 id 字段） */
   songmid: string;
+  /** 实际音频文件 ID；部分歌曲与 songmid 不同 */
+  mediaMid?: string;
   title: string;
   artist: string;
   /** 时长（秒），QQ 接口提供，可能为 0 */

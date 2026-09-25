@@ -7,10 +7,22 @@ import { fetch as undiciFetch, ProxyAgent } from "undici";
  *
  * 可选 HTTP 代理：本地开发开着 Clash 等工具时可能拦截 y.qq.com，
  * 通过环境变量 MUSIC_PROXY 配置（如 http://127.0.0.1:7897），未设置则直连（阿里云直连实测可用）。
+ * 若要播放会员歌曲，可配置 MUSIC_COOKIE（QQ 音乐网页 Cookie）和 MUSIC_UIN（QQ 号）。
  */
 const proxyUrl = process.env.MUSIC_PROXY?.trim();
 const proxyAgent = proxyUrl ? new ProxyAgent(proxyUrl) : undefined;
 const proxyInit = proxyAgent ? { dispatcher: proxyAgent } : {};
+const musicCookie = process.env.MUSIC_COOKIE?.trim();
+
+/** QQ 网关播放权限使用数字 QQ 号；未显式配置时尝试从 Cookie 的 uin/p_uin 读取。 */
+function resolveMusicUin(cookie: string | undefined): string {
+  const configured = process.env.MUSIC_UIN?.trim();
+  if (configured) return configured.replace(/^o/i, "");
+  const matched = cookie?.match(/(?:^|;\s*)(?:p_)?uin=o?(\d+)/i);
+  return matched?.[1] ?? "0";
+}
+
+const musicUin = resolveMusicUin(musicCookie);
 
 /** u.y.qq.com 统一网关：歌单 / vkey / 歌词均走这里 POST */
 const GATEWAY_URL = "https://u.y.qq.com/cgi-bin/musicu.fcg";
@@ -32,12 +44,15 @@ const QQ_HEADERS = {
   "User-Agent":
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
   Accept: "application/json",
+  ...(musicCookie ? { Cookie: musicCookie } : {}),
 };
 
 /** 歌单/搜索结果中的歌曲条目（camelCase 最小结构） */
 export interface QQSongListItem {
   /** 全局唯一歌曲 ID */
   songmid: string;
+  /** 实际音频文件 ID；部分歌曲与 songmid 不同 */
+  mediaMid: string;
   title: string;
   /** 多歌手用 " / " 连接 */
   artist: string;
@@ -59,12 +74,14 @@ export interface QQPlaylist {
 interface RawSongItem {
   mid?: string;
   songmid?: string;
+  media_mid?: string;
   name?: string;
   songname?: string;
   title?: string;
   singer?: Array<{ name?: string }>;
   albummid?: string;
   album?: { mid?: string };
+  file?: { media_mid?: string; mediaMid?: string };
   interval?: number | string;
 }
 
@@ -107,6 +124,19 @@ interface GatewayResponse<T> {
 const playlistCache = new Map<string, { expiresAt: number; data: QQPlaylist }>();
 const vkeyCache = new Map<string, { expiresAt: number; sip: string[]; purl: string }>();
 const lyricCache = new Map<string, { expiresAt: number; lyric: string }>();
+
+/** 将 QQ 返回的相对 purl 组装成浏览器可加载的 HTTPS 地址。 */
+function buildAudioUrl(sip: string[], purl: string): string {
+  if (!purl) return "";
+  // 少数接口版本会直接返回完整地址，避免重复拼接 sip。
+  if (/^https?:\/\//i.test(purl)) {
+    return purl.replace(/^http:\/\//i, "https://");
+  }
+  // HTTPS 页面无法加载 HTTP 音频（混合内容），优先选 HTTPS CDN。
+  const base = sip.find((value) => /^https:\/\//i.test(value)) ?? sip[0] ?? "";
+  if (!base) return "";
+  return `${base.replace(/^http:\/\//i, "https://")}${purl}`;
+}
 
 /** 通用 QQ 接口请求：统一请求头 + 超时 + 代理 + 失败重试 1 次（接口偶发抽风）
  *  返回类型不标注、init 用 undici 自带类型：undici 的 RequestInit/Response 与 DOM 类型不兼容（同 bangumi.ts） */
@@ -164,8 +194,10 @@ async function gatewayQuery<T>(
 
 /** songlist 条目 → 最小结构 */
 function normalizeSong(s: RawSongItem): QQSongListItem {
+  const songmid = s.mid ?? s.songmid ?? "";
   return {
-    songmid: s.mid ?? s.songmid ?? "",
+    songmid,
+    mediaMid: s.file?.media_mid ?? s.file?.mediaMid ?? s.media_mid ?? songmid,
     title: s.name ?? s.songname ?? s.title ?? "",
     artist: (s.singer ?? []).map((x) => x.name ?? "").join(" / "),
     albummid: s.albummid ?? s.album?.mid ?? "",
@@ -285,7 +317,8 @@ export async function getPlaylistDetail(disstid: string): Promise<QQPlaylist> {
 
 /** 批量取播放链接：返回 songmid → 完整 URL（VIP/版权受限为 ""）；带 5min 缓存 */
 export async function getSongVkeys(
-  songmids: string[]
+  songmids: string[],
+  mediaMids: ReadonlyMap<string, string> = new Map()
 ): Promise<Map<string, string>> {
   // 先查缓存，未命中的 mid 再请求网关（接口支持批量，未命中统一一次请求）
   const miss = songmids.filter((m) => {
@@ -295,9 +328,11 @@ export async function getSongVkeys(
   if (miss.length > 0) {
     const data = await gatewayQuery<VkeyData>("vkey.GetVkeyServer", "CgiGetVkey", {
       guid: String(Math.random()).slice(2),
+      // QQ 网关在部分歌曲上要求同时提供目标音频文件名，否则即使有权限也会返回空 purl。
+      filename: miss.map((m) => `M500${mediaMids.get(m) ?? m}.mp3`),
       songmid: miss,
       songtype: miss.map(() => 0),
-      uin: "0",
+      uin: musicUin,
       loginflag: 1,
       platform: "20",
     });
@@ -313,8 +348,8 @@ export async function getSongVkeys(
   }
   return new Map(
     songmids.map((m) => {
-      const c = vkeyCache.get(m)!;
-      return [m, c.purl ? `${c.sip[0] ?? ""}${c.purl}` : ""];
+      const c = vkeyCache.get(m);
+      return [m, c ? buildAudioUrl(c.sip, c.purl) : ""];
     })
   );
 }

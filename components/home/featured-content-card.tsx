@@ -35,12 +35,7 @@ export default function FeaturedContentCard({
           }`}
         />
         <div className="relative mt-auto w-full p-6 sm:p-8">
-          <div className="flex items-center gap-3 text-xs text-gray-400">
-            <span className="font-medium uppercase tracking-wider text-gray-300">
-              最新文章
-            </span>
-            <span>{post.date}</span>
-          </div>
+         
           <h2 className="mt-3 max-w-2xl text-2xl font-bold text-white sm:text-3xl">
             {post.title}
           </h2>
@@ -49,9 +44,7 @@ export default function FeaturedContentCard({
               {post.excerpt}
             </p>
           )}
-          <p className="mt-5 text-sm text-gray-300 transition-colors group-hover:text-white">
-            阅读全文 →
-          </p>
+         
         </div>
       </Link>
     );

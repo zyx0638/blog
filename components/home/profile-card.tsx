@@ -44,7 +44,7 @@ export default function ProfileCard({
             {displayName}
           </h2>
           {about.content ? (
-            <div className="prose prose-sm mt-3 max-h-[6rem] max-w-none overflow-hidden text-gray-400 prose-headings:my-0 prose-headings:text-base prose-headings:text-gray-300 prose-p:my-0 prose-p:text-gray-400 prose-a:text-gray-300 prose-img:hidden">
+            <div className="prose prose-sm mt-3 max-h-[7rem] max-w-none overflow-hidden text-gray-400 prose-headings:my-0 prose-headings:text-base prose-headings:text-gray-300 prose-p:my-0 prose-p:text-gray-400 prose-a:text-gray-300 prose-img:hidden">
               <ReactMarkdown>{about.content}</ReactMarkdown>
             </div>
           ) : (
