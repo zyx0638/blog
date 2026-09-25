@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.gitignore
+.claude
+.agents
+.codex
+data
+coverage
+*.log
+.env
+.env.*
+!.env.example
+*.tsbuildinfo

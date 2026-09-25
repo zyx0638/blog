@@ -14,10 +14,13 @@ RUN npm ci
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# seed.mjs 会读取这两个目录；即使仓库暂时没有 Markdown 文件，也要让 runner 阶段可以复制它们。
+RUN mkdir -p posts moments
 RUN npm run build
 
 FROM base AS runner
 ENV NODE_ENV=production
+ENV HOSTNAME=0.0.0.0
 # 数据库文件目录（docker-compose 挂卷到这里）
 ENV DB_PATH=/app/data/blog.db
 
@@ -35,4 +38,4 @@ COPY --from=build /app/moments ./moments
 
 EXPOSE 3000
 # 幂等入口：建表 → 导入 md/创建管理员（已存在则跳过）→ 启动
-CMD ["sh", "-c", "npx drizzle-kit push --force && node scripts/seed.mjs && npm start"]
+CMD ["sh", "-c", "npx drizzle-kit push --force && node scripts/seed.mjs && exec npm start"]
