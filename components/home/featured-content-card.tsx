@@ -17,7 +17,7 @@ export default function FeaturedContentCard({
     return (
       <Link
         href={`/posts/${post.slug}`}
-        className="glass group relative flex min-h-[360px] h-full overflow-hidden rounded-2xl"
+        className="glass group relative flex min-h-[360px]  overflow-hidden rounded-2xl"
       >
         {post.cover && (
           // eslint-disable-next-line @next/next/no-img-element

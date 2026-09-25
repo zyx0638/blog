@@ -8,7 +8,7 @@ export default function GalleryPreviewCard({
 }) {
   if (!group || group.previews.length === 0) {
     return (
-      <section className="glass flex min-h-[360px] h-full flex-col justify-between rounded-2xl p-6 sm:p-8">
+      <section className="glass flex min-h-[360px]  flex-col justify-between rounded-2xl p-6 sm:p-8">
         <div>
           <p className="text-sm text-gray-500">照片墙</p>
           <h2 className="mt-2 text-2xl font-bold text-white">

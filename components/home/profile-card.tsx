@@ -24,7 +24,7 @@ export default function ProfileCard({
   ];
 
   return (
-    <section className="glass flex h-full min-h-[220px] flex-col rounded-2xl p-6 sm:p-7">
+    <section className="glass flex  min-h-[220px] flex-col rounded-2xl p-6 sm:p-7">
       <div className="flex items-start gap-5">
         {about.avatar ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -40,12 +40,11 @@ export default function ProfileCard({
         )}
 
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-gray-500">关于我</p>
           <h2 className="mt-1 truncate text-2xl font-bold text-white sm:text-3xl">
             {displayName}
           </h2>
           {about.content ? (
-            <div className="prose prose-sm mt-3 max-h-[4.5rem] max-w-none overflow-hidden text-gray-400 prose-headings:my-0 prose-headings:text-base prose-headings:text-gray-300 prose-p:my-0 prose-p:text-gray-400 prose-a:text-gray-300 prose-img:hidden">
+            <div className="prose prose-sm mt-3 max-h-[6rem] max-w-none overflow-hidden text-gray-400 prose-headings:my-0 prose-headings:text-base prose-headings:text-gray-300 prose-p:my-0 prose-p:text-gray-400 prose-a:text-gray-300 prose-img:hidden">
               <ReactMarkdown>{about.content}</ReactMarkdown>
             </div>
           ) : (
@@ -72,7 +71,7 @@ export default function ProfileCard({
             href="/about"
             className="shrink-0 text-sm text-gray-400 transition-colors hover:text-white"
           >
-            查看关于 →
+            更多 →
           </Link>
         </div>
       </div>

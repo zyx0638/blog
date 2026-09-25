@@ -32,8 +32,8 @@ export default function Home() {
         <p className="mt-3 text-gray-400">{siteConfig.description}</p>
       </header>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start">
+        <div className="lg:col-span-6">
           <ProfileCard
             about={about}
             postCount={posts.length}
@@ -42,15 +42,15 @@ export default function Home() {
           />
         </div>
 
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-6">
           <QuickLinksCard />
         </div>
 
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-6">
           <FeaturedContentCard post={posts[0]} moment={moments[0]} />
         </div>
 
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-6">
           <GalleryPreviewCard group={featuredPhotoGroup} />
         </div>
       </div>

@@ -11,7 +11,7 @@ export default function QuickLinksCard() {
   return (
     <nav
       aria-label="快速访问"
-      className="glass h-full min-h-[280px] rounded-2xl p-6 sm:p-8"
+      className="glass  min-h-[280px] rounded-2xl p-6 sm:p-8"
     >
       <h2 className="text-xl font-bold text-white">快速访问</h2>
       <div className="mt-4 divide-y divide-white/10">
