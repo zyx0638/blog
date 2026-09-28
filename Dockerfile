@@ -1,5 +1,4 @@
-# 基于 Debian（glibc），better-sqlite3 有预编译二进制；
-# 不要用 alpine（musl 无预编译，会触发源码编译）
+# 基于 Debian（glibc），在依赖阶段提供 better-sqlite3 所需的编译工具。
 FROM node:22-bookworm-slim AS base
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -8,8 +7,14 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # RUN npm config set registry https://registry.npmmirror.com
 
 FROM base AS deps
+# 原生依赖编译工具仅用于构建，不进入最终运行镜像。
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package.json package-lock.json* ./
-RUN npm ci
+# 使用镜像自带的 Node 头文件，避免 node-gyp 再从 nodejs.org 下载。
+RUN npm_config_nodedir=/usr/local npm ci
 
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
