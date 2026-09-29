@@ -21,6 +21,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # seed.mjs 会读取这两个目录；即使仓库暂时没有 Markdown 文件，也要让 runner 阶段可以复制它们。
 RUN mkdir -p posts moments
+# Next.js 构建会并行加载路由；先初始化构建阶段的 SQLite，避免并发切换日志模式。
+RUN mkdir -p data \
+    && node -e "const db = new (require('better-sqlite3'))('data/blog.db'); db.pragma('journal_mode = WAL'); db.close()"
 RUN npm run build
 
 FROM base AS runner
@@ -28,6 +31,7 @@ ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 # 数据库文件目录（docker-compose 挂卷到这里）
 ENV DB_PATH=/app/data/blog.db
+RUN mkdir -p /app/data
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/.next ./.next
